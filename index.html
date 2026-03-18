@@ -115,7 +115,7 @@
 <body>
 
 <div class="top-btns">
-    <button class="clear-cache-btn" onclick="clearSavedPasswords()" title="저장된 암호 삭제">🗑️</button>
+    <button class="clear-cache-btn" onclick="clearSavedPasswords()">🗑️</button>
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
 </div>
 
@@ -139,7 +139,7 @@
         <option value="forever" selected>영원히 떠도는 유령</option>
     </select>
 
-    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성 💀</button>
+    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성</button>
 
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
@@ -208,7 +208,6 @@
         document.getElementById('create-mode').classList.add('hidden');
         document.getElementById('view-mode').classList.remove('hidden');
 
-        // 만료 여부를 암호 입력 전에 먼저 체크
         if (isExpired(hash)) {
             document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
             document.getElementById('password-section').classList.add('hidden');
@@ -217,7 +216,6 @@
             return;
         }
 
-        // 만료 안됐으면 힌트 + 자동 암호 시도
         document.getElementById('view-title').innerText = "유령이 나타났습니다.";
         document.getElementById('password-section').classList.remove('hidden');
         document.getElementById('content-section').classList.add('hidden');
@@ -241,7 +239,6 @@
         }
     };
 
-    // 같은 탭에서 hash가 바뀌어도 감지
     window.addEventListener('hashchange', function() {
         if (isValidMemoHash(window.location.hash.substring(1))) {
             document.getElementById('readPassword').value = '';
