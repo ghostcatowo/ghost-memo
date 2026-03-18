@@ -119,7 +119,7 @@
 
     <select id="expiryTime">
         <option value="1m">1분 후 소멸 (테스트용)</option>
-        <option value="forever" selected>유령이 세상을 먹는다!</option>
+        <option value="forever" selected>유령 점령</option>
         <option value="1">1시간 후 소멸</option>
         <option value="5">5시간 후 소멸</option>
         <option value="24">1일 후 소멸</option>
@@ -250,7 +250,7 @@
         const expiry = document.getElementById('expiryTime').value;
 
         if (!text || !password) {
-            alert("메모와 암호를 모두 입력하세요.");
+            alert("재확인 요망 💀");
             return;
         }
 
@@ -274,7 +274,7 @@
         const base64Data = btoa(encodeURIComponent(JSON.stringify(dataPayload)));
         const shareLink = window.location.origin + window.location.pathname + "#" + base64Data;
 
-        document.getElementById('generateBtn').innerText = "링크 생성 완료 💀";
+        document.getElementById('generateBtn').innerText = "생성 완료 💀";
 
         document.getElementById('linkContainer').classList.remove('hidden');
         document.getElementById('linkBox').innerText = shareLink;
@@ -345,7 +345,7 @@
             const dataObj = JSON.parse(decodeURIComponent(atob(hashData)));
             if (dataObj.hint) {
                 const hintDiv = document.getElementById('hint-display');
-                hintDiv.innerText = "💡 힌트: " + dataObj.hint;
+                hintDiv.innerText = "💀 암호 힌트: " + dataObj.hint;
                 hintDiv.classList.remove('hidden');
             }
         } catch(e) {}
@@ -371,7 +371,7 @@
             const decodedStr = decodeURIComponent(atob(hashData));
             dataObj = JSON.parse(decodedStr);
         } catch (e) {
-            if (!isAuto) alert("접근 오류 💀");
+            if (!isAuto) alert("링크 오류 💀");
             return;
         }
 
@@ -398,7 +398,7 @@
             document.getElementById('decryptedText').innerText = originalText;
 
         } catch (e) {
-            if (!isAuto) alert("암호 해독 오류 💀");
+            if (!isAuto) alert("암호 오류 💀");
         }
     }
 </script>
