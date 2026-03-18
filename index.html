@@ -119,7 +119,7 @@
 
     <select id="expiryTime">
         <option value="1m">1분 후 소멸 (테스트용)</option>
-        <option value="forever" selected>유령 점령</option>
+        <option value="forever" selected>영원히 떠도는 유령</option>
         <option value="1">1시간 후 소멸</option>
         <option value="5">5시간 후 소멸</option>
         <option value="24">1일 후 소멸</option>
@@ -250,7 +250,7 @@
         const expiry = document.getElementById('expiryTime').value;
 
         if (!text || !password) {
-            alert("재확인 요망 💀");
+            alert("암호 해독 실패 💀");
             return;
         }
 
@@ -294,7 +294,7 @@
                 copyBtn.classList.remove('success');
             }, 600);
         }).catch(() => {
-            alert("복사 실패 💀");
+            alert("링크 복사 실패 💀");
         });
     }
 
@@ -309,7 +309,7 @@
                 btn.classList.remove('success');
             }, 600);
         }).catch(() => {
-            alert("복사 실패 💀");
+            alert("메모 복사 실패 💀");
         });
     }
 
