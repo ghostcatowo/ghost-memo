@@ -16,7 +16,8 @@
             --btn-text: #ffffff;
             --btn-hover: #444444;
             --subtitle-color: #666666;
-            --success-btn-bg: #4CAF50;
+            --copy-success-bg: #888888;
+            --copy-success-text: #ffffff;
         }
 
         /* 🌙 다크 모드 */
@@ -29,14 +30,16 @@
             --btn-text: #000000;
             --btn-hover: #cccccc;
             --subtitle-color: #888888;
-            --success-btn-bg: #81C784;
+            --copy-success-bg: #555555;
+            --copy-success-text: #ffffff;
         }
 
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 80px 20px 40px; box-sizing: border-box; margin: 0; transition: background-color 0.4s, color 0.4s; position: relative; }
 
-        /* 🌟 해/달 버튼: 맨 위에 고정 (스크롤 시 위로 자연스럽게 넘어감) */
-        .theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.3s; z-index: 100; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
-        .theme-toggle-btn:hover { transform: scale(1.1); }
+        .top-btns { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 100; }
+
+        .theme-toggle-btn, .clear-cache-btn { background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.3s; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
+        .theme-toggle-btn:hover, .clear-cache-btn:hover { transform: scale(1.1); }
 
         .container { background: var(--container-bg); padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; max-width: 100%; text-align: center; border: 1px solid var(--border-color); transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s; }
 
@@ -64,7 +67,11 @@
 
         button.copy-btn { margin-top: 10px; background-color: var(--border-color); color: var(--text-color); }
         button.copy-btn:hover { background-color: #cccccc; color: #000; }
-        button.copy-btn.success { background-color: var(--success-btn-bg); color: white; }
+        button.copy-btn.success { background-color: var(--copy-success-bg); color: var(--copy-success-text); }
+
+        /* 메모 복사 / 작성 버튼 나란히 */
+        .memo-action-row { display: flex; gap: 10px; margin-top: 15px; }
+        .memo-action-row button { margin-top: 0; }
 
         .hidden { display: none; }
 
@@ -94,7 +101,10 @@
 </head>
 <body>
 
-<button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+<div class="top-btns">
+    <button class="clear-cache-btn" onclick="clearSavedPasswords()" title="저장된 암호 삭제">🗑️</button>
+    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+</div>
 
 <div class="container" id="create-mode">
     <div class="ghost-icon">👻</div>
@@ -125,17 +135,21 @@
 
 <div class="container hidden" id="view-mode">
     <div class="ghost-icon">👻</div>
-    <h2>유령이 나타났습니다.</h2>
+    <h2 id="view-title">유령이 나타났습니다.</h2>
 
     <div id="password-section">
         <div id="hint-display" class="hidden"></div>
         <input type="password" id="readPassword" placeholder="암호 입력">
-        <button class="action-btn" onclick="unlockMemo()">열람하기</button>
+        <button class="action-btn" onclick="unlockMemo()">유령 부르기</button>
     </div>
 
     <div id="content-section" class="hidden">
         <div class="post-it-wrapper">
             <div class="post-it-view" id="decryptedText"></div>
+        </div>
+        <div class="memo-action-row">
+            <button class="action-btn copy-btn" id="memoCopyBtn" onclick="copyMemoText()">메모 복사 📋</button>
+            <button class="action-btn" onclick="goToCreate()">메모 작성 ✏️</button>
         </div>
     </div>
 </div>
@@ -148,6 +162,11 @@
         localStorage.setItem('ghost_memo_theme', isDark ? 'dark' : 'light');
     }
 
+    function clearSavedPasswords() {
+        localStorage.removeItem('ghost_saved_passwords');
+        alert("저장된 암호가 모두 삭제됐습니다 💀");
+    }
+
     function isValidMemoHash(hash) {
         if (!hash) return false;
         try {
@@ -156,6 +175,42 @@
         } catch {
             return false;
         }
+    }
+
+    function isExpired(hash) {
+        try {
+            const dataObj = JSON.parse(decodeURIComponent(atob(hash)));
+            if (dataObj.exp === "forever") return false;
+            return new Date().getTime() > dataObj.exp;
+        } catch {
+            return false;
+        }
+    }
+
+    function showViewMode() {
+        const hash = window.location.hash.substring(1);
+        if (!isValidMemoHash(hash)) return;
+
+        document.getElementById('create-mode').classList.add('hidden');
+        document.getElementById('view-mode').classList.remove('hidden');
+
+        // 만료 여부를 암호 입력 전에 먼저 체크
+        if (isExpired(hash)) {
+            document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
+            document.getElementById('password-section').classList.add('hidden');
+            document.getElementById('content-section').classList.add('hidden');
+            // 유령 아이콘에 소멸 애니메이션
+            document.querySelector('#view-mode .ghost-icon').classList.add('ghost-vanish');
+            return;
+        }
+
+        // 만료 안됐으면 힌트 + 자동 암호 시도
+        document.getElementById('view-title').innerText = "유령이 나타났습니다.";
+        document.getElementById('password-section').classList.remove('hidden');
+        document.getElementById('content-section').classList.add('hidden');
+        document.querySelector('#view-mode .ghost-icon').classList.remove('ghost-vanish');
+
+        checkAutoPass();
     }
 
     window.onload = function() {
@@ -168,13 +223,25 @@
             document.getElementById('themeBtn').innerText = '🌙';
         }
 
-        const hash = window.location.hash.substring(1);
-        if (isValidMemoHash(hash)) {
-            document.getElementById('create-mode').classList.add('hidden');
-            document.getElementById('view-mode').classList.remove('hidden');
-            checkAutoPass();
+        if (isValidMemoHash(window.location.hash.substring(1))) {
+            showViewMode();
         }
     };
+
+    // 같은 탭에서 hash가 바뀌어도 감지
+    window.addEventListener('hashchange', function() {
+        if (isValidMemoHash(window.location.hash.substring(1))) {
+            // view-mode 상태 초기화
+            document.getElementById('readPassword').value = '';
+            document.getElementById('hint-display').classList.add('hidden');
+            document.getElementById('content-section').classList.add('hidden');
+            document.getElementById('password-section').classList.remove('hidden');
+            showViewMode();
+        } else {
+            document.getElementById('create-mode').classList.remove('hidden');
+            document.getElementById('view-mode').classList.add('hidden');
+        }
+    });
 
     function generateLink() {
         const text = document.getElementById('memoText').value;
@@ -189,9 +256,9 @@
 
         const now = new Date().getTime();
         let expiryTimestamp = "forever";
-        
+
         if (expiry === "1m") {
-            expiryTimestamp = now + (1 * 60 * 1000); 
+            expiryTimestamp = now + (1 * 60 * 1000);
         } else if (expiry !== "forever") {
             expiryTimestamp = now + (parseInt(expiry) * 60 * 60 * 1000);
         }
@@ -211,24 +278,52 @@
 
         document.getElementById('linkContainer').classList.remove('hidden');
         document.getElementById('linkBox').innerText = shareLink;
-        
+
         const copyBtn = document.getElementById('copyBtn');
         copyBtn.classList.remove('success');
     }
 
     function copyToClipboard() {
         const linkText = document.getElementById('linkBox').innerText;
-        
+
         navigator.clipboard.writeText(linkText).then(() => {
             const copyBtn = document.getElementById('copyBtn');
             copyBtn.classList.add('success');
-            
+
             setTimeout(() => {
                 copyBtn.classList.remove('success');
             }, 600);
-        }).catch(err => {
+        }).catch(() => {
             alert("복사 실패 💀");
         });
+    }
+
+    function copyMemoText() {
+        const memoText = document.getElementById('decryptedText').innerText;
+
+        navigator.clipboard.writeText(memoText).then(() => {
+            const btn = document.getElementById('memoCopyBtn');
+            btn.classList.add('success');
+
+            setTimeout(() => {
+                btn.classList.remove('success');
+            }, 600);
+        }).catch(() => {
+            alert("복사 실패 💀");
+        });
+    }
+
+    function goToCreate() {
+        // hash 제거하고 작성 화면으로
+        history.pushState('', document.title, window.location.pathname);
+        document.getElementById('view-mode').classList.add('hidden');
+        document.getElementById('create-mode').classList.remove('hidden');
+        // 작성 화면 초기화
+        document.getElementById('memoText').value = '';
+        document.getElementById('memoPassword').value = '';
+        document.getElementById('memoHint').value = '';
+        document.getElementById('generateBtn').innerText = "링크 생성";
+        document.getElementById('linkContainer').classList.add('hidden');
     }
 
     function tryUnlockSilent(hashData, testPassword) {
@@ -280,8 +375,8 @@
             return;
         }
 
+        // 만료 체크는 showViewMode에서 이미 했지만 혹시 모르니 한번 더
         if (dataObj.exp !== "forever" && new Date().getTime() > dataObj.exp) {
-            document.getElementById('view-mode').innerHTML = "<div class='ghost-icon ghost-vanish'>👻</div><h2>유령이 사라졌습니다.</h2>";
             return;
         }
 
@@ -298,7 +393,6 @@
                 localStorage.setItem('ghost_saved_passwords', JSON.stringify(savedPasswords));
             }
 
-            document.querySelector('#view-mode h2').innerText = "암호 해독 완료 💀";
             document.getElementById('password-section').classList.add('hidden');
             document.getElementById('content-section').classList.remove('hidden');
             document.getElementById('decryptedText').innerText = originalText;
