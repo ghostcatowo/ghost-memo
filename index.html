@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>유령 메모</title>
+    <title>👻 유령 메모 👻</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         /* ☀️ 라이트 모드 (기본) */
@@ -125,7 +125,7 @@
         <option value="24">1일 후 소멸</option>
     </select>
 
-    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성</button>
+    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성 💀</button>
 
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
@@ -140,7 +140,7 @@
     <div id="password-section">
         <div id="hint-display" class="hidden"></div>
         <input type="password" id="readPassword" placeholder="암호 입력">
-        <button class="action-btn" onclick="unlockMemo()">유령 부르기</button>
+        <button class="action-btn" onclick="unlockMemo()">유령 잡기</button>
     </div>
 
     <div id="content-section" class="hidden">
@@ -148,8 +148,8 @@
             <div class="post-it-view" id="decryptedText"></div>
         </div>
         <div class="memo-action-row">
-            <button class="action-btn copy-btn" id="memoCopyBtn" onclick="copyMemoText()">메모 복사 📋</button>
-            <button class="action-btn" onclick="goToCreate()">메모 작성 ✏️</button>
+            <button class="action-btn copy-btn" id="memoCopyBtn" onclick="copyMemoText()">유령 복사 📋</button>
+            <button class="action-btn" onclick="goToCreate()">유령 소환 🕯</button>
         </div>
     </div>
 </div>
@@ -164,7 +164,7 @@
 
     function clearSavedPasswords() {
         localStorage.removeItem('ghost_saved_passwords');
-        alert("저장된 암호가 모두 삭제됐습니다 💀");
+        alert("저장 암호 삭제 💀");
     }
 
     function isValidMemoHash(hash) {
