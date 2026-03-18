@@ -110,6 +110,31 @@
 
         .ghost-title-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
+
+        /* 🔥 불타는 테두리 버튼 */
+        @keyframes fire-border {
+            0%   { box-shadow: 0 0 6px 2px #ff4400, 0 0 12px 4px #ff6600, 0 0 20px 6px #ff9900; }
+            25%  { box-shadow: 0 0 8px 3px #ff6600, 0 0 16px 6px #ff9900, 0 0 24px 8px #ffcc00; }
+            50%  { box-shadow: 0 0 10px 4px #ff2200, 0 0 20px 7px #ff5500, 0 0 30px 10px #ff8800; }
+            75%  { box-shadow: 0 0 7px 2px #ff7700, 0 0 14px 5px #ffaa00, 0 0 22px 7px #ffdd00; }
+            100% { box-shadow: 0 0 6px 2px #ff4400, 0 0 12px 4px #ff6600, 0 0 20px 6px #ff9900; }
+        }
+
+        button.fire-btn {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: 2px solid #ff6600;
+            padding: 14px;
+            width: 100%;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 15px;
+            animation: fire-border 1.8s ease-in-out infinite;
+            transition: background-color 0.3s;
+        }
+        button.fire-btn:hover { background-color: var(--btn-hover); }
     </style>
 </head>
 <body>
@@ -150,6 +175,10 @@
 <div class="container hidden" id="view-mode">
     <div class="ghost-icon" id="view-ghost">👻</div>
     <h2 id="view-title">유령이 나타났습니다.</h2>
+
+    <div id="expired-section" class="hidden">
+        <button class="fire-btn" onclick="goToCreate()">유령 소환 🕯</button>
+    </div>
 
     <div id="password-section">
         <div id="hint-display" class="hidden"></div>
@@ -212,6 +241,7 @@
             document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
             document.getElementById('password-section').classList.add('hidden');
             document.getElementById('content-section').classList.add('hidden');
+            document.getElementById('expired-section').classList.remove('hidden');
             document.getElementById('view-ghost').classList.add('ghost-vanish');
             return;
         }
@@ -219,6 +249,7 @@
         document.getElementById('view-title').innerText = "유령이 나타났습니다.";
         document.getElementById('password-section').classList.remove('hidden');
         document.getElementById('content-section').classList.add('hidden');
+        document.getElementById('expired-section').classList.add('hidden');
         document.getElementById('view-ghost').classList.remove('ghost-vanish');
 
         checkAutoPass();
@@ -244,6 +275,7 @@
             document.getElementById('readPassword').value = '';
             document.getElementById('hint-display').classList.add('hidden');
             document.getElementById('content-section').classList.add('hidden');
+            document.getElementById('expired-section').classList.add('hidden');
             document.getElementById('password-section').classList.remove('hidden');
             document.getElementById('view-ghost').classList.remove('ghost-vanish');
             showViewMode();
