@@ -6,6 +6,7 @@
     <title>유령 메모</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
+        /* ☀️ 라이트 모드 (기본) */
         :root {
             --bg-color: #f4f4f9;
             --container-bg: #ffffff;
@@ -14,7 +15,11 @@
             --btn-bg: #222222;
             --btn-text: #ffffff;
             --btn-hover: #444444;
+            --subtitle-color: #666666;
+            --success-btn-bg: #4CAF50;
         }
+
+        /* 🌙 다크 모드 */
         body.dark-mode {
             --bg-color: #121212;
             --container-bg: #1e1e1e;
@@ -23,12 +28,16 @@
             --btn-bg: #ffffff;
             --btn-text: #000000;
             --btn-hover: #cccccc;
+            --subtitle-color: #888888;
+            --success-btn-bg: #81C784;
         }
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 80px 20px 40px; box-sizing: border-box; margin: 0; transition: 0.4s; position: relative; }
-        .theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; z-index: 100; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
+
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 80px 20px 40px; box-sizing: border-box; margin: 0; transition: background-color 0.4s, color 0.4s; position: relative; }
+
+        .theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.2s; z-index: 100; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
         .theme-toggle-btn:active { transform: scale(0.9); }
 
-        /* 🌟 깜빡임 방지: 기본 숨김 */
+        /* 🌟 2번 확인: 일단 숨기고 시작 (깜빡임 방지) */
         .container { 
             display: none; 
             background: var(--container-bg); padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; max-width: 100%; text-align: center; border: 1px solid var(--border-color); transition: 0.4s; 
@@ -36,26 +45,43 @@
         .show { display: block !important; }
 
         h2 { color: var(--text-color); margin-bottom: 25px; font-weight: bold; letter-spacing: 2px; }
+
         .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; }
-        .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
-        .post-it-input, .post-it-view { width: 100%; min-height: 160px; background: transparent; border: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; }
-        .post-it-view { white-space: pre-wrap; line-height: 1.6; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); box-shadow: -2px -2px 5px rgba(0,0,0,0.1); border-bottom-left-radius: 2px; }
+
+        .post-it-input { width: 100%; height: 160px; background: transparent; border: none; resize: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; }
+        .post-it-input:focus { outline: none; }
+        .post-it-input::placeholder { color: #888888; font-weight: bold; }
+
+        .post-it-view { min-height: 120px; white-space: pre-wrap; line-height: 1.6; padding: 18px 25px 25px 18px; box-sizing: border-box; color: #222222; font-size: 14px; }
+
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
+        input::placeholder { color: var(--subtitle-color); }
+        input:focus, select:focus { outline: none; border-color: var(--text-color); }
         
-        /* 🌟 클릭 애니메이션 */
         button.action-btn { 
             background-color: var(--btn-bg); color: var(--btn-text); border: none; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 15px; 
-            transition: transform 0.1s; 
+            transition: transform 0.1s, background-color 0.2s; 
         }
         button.action-btn:active { transform: scale(0.96); }
+
         button.copy-btn { margin-top: 10px; background-color: var(--border-color); color: var(--text-color); }
+        button.copy-btn:hover { background-color: #cccccc; color: #000; }
 
         .hidden { display: none !important; }
+
         #linkBox { background: transparent; color: var(--text-color); padding: 15px; border-radius: 6px; word-break: break-all; font-size: 12px; border: 1px solid var(--border-color); margin-top: 20px; max-height: 70px; overflow-y: auto; text-align: left;}
 
         @keyframes wavy-floating { 0% { transform: translate(0,0); } 50% { transform: translate(0,-15px); } 100% { transform: translate(0,0); } }
         .ghost-icon { font-size: 45px; margin-bottom: 5px; display: inline-block; animation: wavy-floating 3.5s ease-in-out infinite; }
-        .ghost-vanish { opacity: 0.3; filter: blur(5px); }
+        
+        /* 🌟 1번 확인: 유령 소멸 애니메이션 다시 추가 */
+        @keyframes vanish-loop {
+            0% { opacity: 1; filter: blur(0px); transform: scale(1); }
+            50% { opacity: 0.1; filter: blur(8px); transform: scale(1.1); }
+            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
+        }
+        .ghost-vanish { animation: vanish-loop 4s ease-in-out infinite; }
     </style>
 </head>
 <body>
@@ -71,15 +97,16 @@
     <input type="password" id="memoPassword" placeholder="암호 설정 (필수)">
     <input type="text" id="memoHint" placeholder="암호 힌트 (선택)">
     <select id="expiryTime">
-        <option value="1m">1분 후 소멸</option>
+        <option value="1m">1분 후 소멸 (테스트용)</option>
         <option value="forever" selected>유령이 세상을 먹는다!</option>
         <option value="1">1시간 후 소멸</option>
+        <option value="5">5시간 후 소멸</option>
         <option value="24">1일 후 소멸</option>
     </select>
-    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성</button>
+    <button class="action-btn" id="generateBtn" onclick="generateLink()">リンク生成</button>
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
-        <button class="action-btn copy-btn" onclick="copyToClipboard()">링크 복사 📋</button>
+        <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">リンク複寫 📋</button>
     </div>
 </div>
 
@@ -87,7 +114,7 @@
     <div class="ghost-icon">👻</div>
     <h2>유령이 나타났습니다.</h2>
     <div id="password-section">
-        <div id="hint-display" class="hidden" style="margin-bottom:10px; font-weight:bold;"></div>
+        <div id="hint-display" class="hidden"></div>
         <input type="password" id="readPassword" placeholder="암호 입력">
         <button class="action-btn" onclick="unlockMemo()">유령 부르기</button>
     </div>
@@ -95,7 +122,6 @@
         <div class="post-it-wrapper">
             <div class="post-it-view" id="decryptedText"></div>
         </div>
-        <button class="action-btn copy-btn" onclick="copyDecryptedText()">메모 복사 📋</button>
     </div>
 </div>
 
@@ -107,6 +133,7 @@
         localStorage.setItem('ghost_memo_theme', isDark ? 'dark' : 'light');
     }
 
+    // 🌟 2번 확인: 페이지 로드 시 즉시 판단 (깜빡임 방지)
     document.addEventListener('DOMContentLoaded', function() {
         const savedTheme = localStorage.getItem('ghost_memo_theme');
         if (savedTheme === 'dark') { document.body.classList.add('dark-mode'); document.getElementById('themeBtn').innerText = '☀️'; }
@@ -122,6 +149,7 @@
         const hashData = window.location.hash.substring(1);
         try {
             const data = JSON.parse(decodeURIComponent(atob(hashData)));
+            // 진짜 시간이 다 됐을 때만 소멸 창 띄움
             if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 const view = document.getElementById('view-mode');
                 view.innerHTML = "<div class='ghost-icon ghost-vanish'>👻</div><h2>유령이 사라졌습니다.</h2>";
@@ -147,11 +175,13 @@
         let exp = expiry === "forever" ? "forever" : (expiry === "1m" ? now + 60000 : now + parseInt(expiry)*3600000);
         const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
         const payload = btoa(encodeURIComponent(JSON.stringify({content: encryptedText, exp: exp, hint: hint})));
+        
         document.getElementById('generateBtn').innerText = "링크 생성 완료 💀";
         document.getElementById('linkContainer').classList.remove('hidden');
         document.getElementById('linkBox').innerText = window.location.origin + window.location.pathname + "#" + payload;
     }
 
+    // 🌟 1번 확인: 텍스트 변경 없이 복사
     function copyToClipboard() { navigator.clipboard.writeText(document.getElementById('linkBox').innerText); }
     function copyDecryptedText() { navigator.clipboard.writeText(document.getElementById('decryptedText').innerText); }
 
@@ -161,6 +191,8 @@
         const hashData = window.location.hash.substring(1);
         try {
             const data = JSON.parse(decodeURIComponent(atob(hashData)));
+            
+            // 진짜 시간이 다 됐을 때만 소멸 창 띄움
             if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 document.getElementById('view-mode').innerHTML = "<div class='ghost-icon ghost-vanish'>👻</div><h2>유령이 사라졌습니다.</h2>";
                 return;
@@ -173,10 +205,7 @@
             document.getElementById('password-section').classList.add('hidden');
             document.getElementById('content-section').classList.remove('hidden');
             document.getElementById('decryptedText').innerText = originalText;
-        } catch (e) {
-            alert("암호 해독 오류 💀");
-            passwordInput.value = "";
-        }
+        } catch (e) { alert("암호 해독 오류 💀"); passwordInput.value = ""; }
     }
 </script>
 </body>
