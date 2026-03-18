@@ -69,7 +69,7 @@
         button.copy-btn:hover { background-color: #cccccc; color: #000; }
         button.copy-btn.success { background-color: var(--copy-success-bg); color: var(--copy-success-text); }
         .memo-action-row { display: flex; gap: 10px; margin-top: 15px; }
-        .memo-action-row button { margin-top: 0; }
+        .memo-action-row button { margin-top: 0; flex: 1; }
 
         .hidden { display: none; }
 
@@ -131,6 +131,7 @@
             font-weight: bold;
             font-size: 16px;
             margin-top: 15px;
+            box-sizing: border-box;
             animation: smoke-pulse 3s ease-in-out infinite;
             transition: background-color 0.3s;
         }
