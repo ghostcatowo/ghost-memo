@@ -178,7 +178,7 @@
 
     function clearSavedPasswords() {
         localStorage.removeItem('ghost_saved_passwords');
-        alert("저장 암호 삭제 💀");
+        alert("저장 암호 삭제 완료 💀");
     }
 
     function isValidMemoHash(hash) {
@@ -248,6 +248,7 @@
             document.getElementById('hint-display').classList.add('hidden');
             document.getElementById('content-section').classList.add('hidden');
             document.getElementById('password-section').classList.remove('hidden');
+            document.getElementById('view-ghost').classList.remove('ghost-vanish');
             showViewMode();
         } else {
             document.getElementById('create-mode').classList.remove('hidden');
@@ -262,7 +263,7 @@
         const expiry = document.getElementById('expiryTime').value;
 
         if (!text || !password) {
-            alert("암호 해독 실패 💀");
+            alert("메모 & 암호 확인 요망 💀");
             return;
         }
 
@@ -286,7 +287,7 @@
         const base64Data = btoa(encodeURIComponent(JSON.stringify(dataPayload)));
         const shareLink = window.location.origin + window.location.pathname + "#" + base64Data;
 
-        document.getElementById('generateBtn').innerText = "생성 완료 💀";
+        document.getElementById('generateBtn').innerText = "링크 생성 완료 💀";
 
         document.getElementById('linkContainer').classList.remove('hidden');
         document.getElementById('linkBox').innerText = shareLink;
@@ -326,7 +327,8 @@
         document.getElementById('memoText').value = '';
         document.getElementById('memoPassword').value = '';
         document.getElementById('memoHint').value = '';
-        document.getElementById('generateBtn').innerText = "링크 생성 💀";
+        document.getElementById('expiryTime').value = 'forever';
+        document.getElementById('generateBtn').innerText = "링크 생성";
         document.getElementById('linkContainer').classList.add('hidden');
     }
 
@@ -349,7 +351,7 @@
             const dataObj = JSON.parse(decodeURIComponent(atob(hashData)));
             if (dataObj.hint) {
                 const hintDiv = document.getElementById('hint-display');
-                hintDiv.innerText = "💀 암호 힌트: " + dataObj.hint;
+                hintDiv.innerText = "💀 힌트: " + dataObj.hint;
                 hintDiv.classList.remove('hidden');
             }
         } catch(e) {}
