@@ -111,19 +111,19 @@
         .ghost-title-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
 
-        /* 🔥 불타는 테두리 버튼 */
-        @keyframes fire-border {
-            0%   { box-shadow: 0 0 6px 2px #ff4400, 0 0 12px 4px #ff6600, 0 0 20px 6px #ff9900; }
-            25%  { box-shadow: 0 0 8px 3px #ff6600, 0 0 16px 6px #ff9900, 0 0 24px 8px #ffcc00; }
-            50%  { box-shadow: 0 0 10px 4px #ff2200, 0 0 20px 7px #ff5500, 0 0 30px 10px #ff8800; }
-            75%  { box-shadow: 0 0 7px 2px #ff7700, 0 0 14px 5px #ffaa00, 0 0 22px 7px #ffdd00; }
-            100% { box-shadow: 0 0 6px 2px #ff4400, 0 0 12px 4px #ff6600, 0 0 20px 6px #ff9900; }
+        /* 🌫️ 연기 피어오르는 버튼 */
+        @keyframes smoke-pulse {
+            0%   { box-shadow: 0 0 8px 2px rgba(160,160,160,0.15), 0 0 20px 6px rgba(130,130,130,0.08); opacity: 0.85; }
+            30%  { box-shadow: 0 0 14px 5px rgba(180,180,180,0.3), 0 0 30px 12px rgba(150,150,150,0.15); opacity: 1; }
+            60%  { box-shadow: 0 0 10px 3px rgba(200,200,200,0.2), 0 0 24px 8px rgba(160,160,160,0.1); opacity: 0.9; }
+            80%  { box-shadow: 0 0 18px 7px rgba(170,170,170,0.35), 0 0 36px 14px rgba(140,140,140,0.18); opacity: 1; }
+            100% { box-shadow: 0 0 8px 2px rgba(160,160,160,0.15), 0 0 20px 6px rgba(130,130,130,0.08); opacity: 0.85; }
         }
 
         button.fire-btn {
             background-color: var(--btn-bg);
             color: var(--btn-text);
-            border: 2px solid #ff6600;
+            border: 1px solid rgba(180,180,180,0.4);
             padding: 14px;
             width: 100%;
             border-radius: 6px;
@@ -131,7 +131,7 @@
             font-weight: bold;
             font-size: 16px;
             margin-top: 15px;
-            animation: fire-border 1.8s ease-in-out infinite;
+            animation: smoke-pulse 3s ease-in-out infinite;
             transition: background-color 0.3s;
         }
         button.fire-btn:hover { background-color: var(--btn-hover); }
