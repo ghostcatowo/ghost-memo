@@ -125,7 +125,6 @@
             background-color: transparent; 
             color: var(--text-color); 
             border: none; 
-            border-bottom: 1px dashed var(--subtitle-color); 
             padding: 14px 4px; 
             width: 100%; 
             border-radius: 0; 
@@ -134,15 +133,31 @@
             font-size: 15px; 
             text-align: left; 
             box-sizing: border-box; 
+            display: flex; 
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .memo-item-btn:hover { 
+            background-color: rgba(128, 128, 128, 0.08); 
+            padding-left: 10px; 
+        }
+
+        /* 텍스트 부분에만 밑줄 적용 */
+        .memo-item-text {
+            border-bottom: 1px dashed var(--subtitle-color);
+            padding-bottom: 2px;
+            flex: 1;
             overflow: hidden; 
             text-overflow: ellipsis; 
             white-space: nowrap; 
-            display: flex; /* 체크리스트처럼 가로 정렬 */
-            align-items: center;
-            gap: 10px;
+            transition: border-bottom 0.2s;
+        }
+        .memo-item-btn:hover .memo-item-text {
+            border-bottom: 1px solid var(--text-color);
         }
 
-        .memo-item-body { display: none; margin-top: 15px; margin-bottom: 6px; } /* 줄과 포스트잇 사이 여백 추가 */
+        .memo-item-body { display: none; margin-top: 15px; margin-bottom: 6px; } 
         .memo-item-body.open { display: block; }
 
         .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; overflow: hidden; }
@@ -150,8 +165,8 @@
         .memo-item-time { font-size: 11px; color: #888888; padding: 10px 16px 0 16px; }
         .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 6px 30px 20px 16px; }
         
-        /* 1. 링크를 테마 텍스트 색상(검정/흰색)에 굵게 밑줄로 변경 */
-        .memo-item-content a, .post-it-view a { color: var(--text-color); font-weight: bold; text-decoration: underline; word-break: break-all; } 
+        /* 굵기 속성(font-weight) 폰트 기본값(normal)으로 원상 복구 */
+        .memo-item-content a, .post-it-view a { color: var(--text-color); text-decoration: underline; word-break: break-all; font-weight: normal; } 
 
         .memo-item-actions { display: flex; gap: 8px; }
         .memo-item-actions button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
@@ -211,7 +226,9 @@
     <div class="ghost-icon" id="view-ghost">👻</div>
     <h2 id="view-title">유령이 나타났습니다.</h2>
 
-    <div id="view-loading" class="loading-text">데려오는 중... 👻</div> <div id="expired-section" class="hidden">
+    <div id="view-loading" class="loading-text">데려오는 중... 👻</div>
+
+    <div id="expired-section" class="hidden">
         <button class="action-btn" onclick="goToCreate()">유령 소환 🕯</button>
     </div>
 
@@ -236,7 +253,8 @@
     <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 관리</span></h2>
 
-    <div id="manage-loading" class="loading-text hidden">데려오는 중... 👻</div> <div id="manage-empty" class="empty-msg hidden">소환된 유령이 없습니다. 👻</div>
+    <div id="manage-loading" class="loading-text hidden">데려오는 중... 👻</div>
+    <div id="manage-empty" class="empty-msg hidden">소환된 유령이 없습니다. 👻</div>
 
     <div id="memo-list" class="memo-list"></div>
 
@@ -273,9 +291,9 @@
         alert("저장 암호 삭제 완료 💀");
     };
 
-    // 랜덤 ID 생성
+    // 랜덤 ID 생성 (6자리로 짧게 수정)
     function generateId() {
-        return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+        return Math.random().toString(36).substring(2, 8);
     }
 
     // URL을 클릭 가능한 링크로 변환 (XSS 방지 포함)
@@ -295,7 +313,7 @@
         const expiry = document.getElementById('expiryTime').value;
 
         if (!text || !password) {
-            alert("메모 & 암호 확인 요망 💀");
+            alert("메모,암호 확인 💀");
             return;
         }
 
@@ -449,7 +467,7 @@
                 const data = docSnap.data();
 
                 // 내용 복호화 시도
-                let previewText = "🔒";
+                let previewText = "💀";
                 try {
                     const bytes = CryptoJS.AES.decrypt(data.content, memo.password);
                     const text = bytes.toString(CryptoJS.enc.Utf8);
@@ -479,10 +497,11 @@
 
             const item = document.createElement('div');
             item.className = 'memo-item-wrap';
-            // 3번 및 4번 반영: 유령 체크리스트 아이콘 추가, 삭제 확인 버튼 텍스트 수정
+            
+            // 텍스트 밑에만 밑줄 적용을 위해 <span class="memo-item-text"> 로 감쌌습니다.
             item.innerHTML = `
                 <button class="memo-item-btn" onclick="toggleMemoItem(${idx})">
-                    <span style="font-size: 16px;">👻</span> <span>${memo.previewText}</span>
+                    <span style="font-size: 16px;">👻</span> <span class="memo-item-text">${memo.previewText}</span>
                 </button>
                 <div class="memo-item-body" id="memo-body-${idx}">
                     <div class="memo-item-postit">
@@ -508,7 +527,7 @@
             if (content) {
                 contentEl.innerHTML = linkify(content);
             } else {
-                contentEl.innerText = "🔒 복호화 실패";
+                contentEl.innerText = "💀 복호화 실패";
             }
         });
 
