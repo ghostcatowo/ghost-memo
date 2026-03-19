@@ -121,8 +121,23 @@
 
         .memo-item-wrap { display: flex; flex-direction: column; }
 
-        .memo-item-btn { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; text-align: left; box-sizing: border-box; transition: 0.3s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .memo-item-btn:hover { background-color: var(--btn-hover); }
+        .memo-item-btn { 
+            background-color: transparent; 
+            color: var(--text-color); 
+            border: none; 
+            border-bottom: 1px dashed var(--subtitle-color); 
+            padding: 14px 4px; 
+            width: 100%; 
+            border-radius: 0; 
+            cursor: pointer; 
+            font-weight: 500; 
+            font-size: 15px; 
+            text-align: left; 
+            box-sizing: border-box; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap; 
+        }
 
         .memo-item-body { display: none; margin-bottom: 6px; }
         .memo-item-body.open { display: block; }
@@ -157,7 +172,6 @@
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
 </div>
 
-<!-- 작성 화면 -->
 <div class="container hidden" id="create-mode">
     <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 메모</span></h2>
@@ -187,26 +201,22 @@
     </div>
 </div>
 
-<!-- 열람 화면 -->
 <div class="container hidden" id="view-mode">
     <div class="ghost-icon" id="view-ghost">👻</div>
     <h2 id="view-title">유령이 나타났습니다.</h2>
 
     <div id="view-loading" class="loading-text">불러오는 중... 👻</div>
 
-    <!-- 만료/오류/삭제 시 -->
     <div id="expired-section" class="hidden">
         <button class="action-btn" onclick="goToCreate()">유령 소환 🕯</button>
     </div>
 
-    <!-- 암호 입력 -->
     <div id="password-section" class="hidden">
         <div id="hint-display" class="hidden"></div>
         <input type="password" id="readPassword" placeholder="암호 입력">
         <button class="action-btn" onclick="unlockMemo()">유령 만나기</button>
     </div>
 
-    <!-- 메모 내용 -->
     <div id="content-section" class="hidden">
         <div class="post-it-wrapper">
             <div class="post-it-view" id="decryptedText"></div>
@@ -218,7 +228,6 @@
     </div>
 </div>
 
-<!-- 유령 관리 화면 -->
 <div class="container hidden" id="manage-mode">
     <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 관리</span></h2>
@@ -459,7 +468,7 @@
             const item = document.createElement('div');
             item.className = 'memo-item-wrap';
             item.innerHTML = `
-                <button class="memo-item-btn" onclick="toggleMemoItem(${idx})">👻 ${memo.previewText}</button>
+                <button class="memo-item-btn" onclick="toggleMemoItem(${idx})">${memo.previewText}</button>
                 <div class="memo-item-body" id="memo-body-${idx}">
                     <div class="memo-item-postit">
                         <div class="memo-item-time">${createdText}</div>
