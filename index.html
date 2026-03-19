@@ -73,7 +73,7 @@
 
         .hidden { display: none; }
 
-        /* 링크 박스 */
+        /* 소환진 박스 */
         #linkBox { background: transparent; color: var(--text-color); padding: 15px; border-radius: 6px; word-break: break-all; font-size: 12px; border: 1px solid var(--border-color); margin-top: 20px; max-height: 70px; overflow-y: auto; text-align: left;}
         #linkBox::-webkit-scrollbar { width: 6px; }
         #linkBox::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 10px; }
@@ -111,8 +111,6 @@
         .ghost-title { animation: ghost-blur 6s ease-in-out infinite; display: inline-block; }
         .ghost-title-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
-
-
     </style>
 </head>
 <body>
@@ -143,11 +141,11 @@
         <option value="forever" selected>영원히 떠도는 유령</option>
     </select>
 
-    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성</button>
+    <button class="action-btn" id="generateBtn" onclick="generateLink()">소환진 생성</button>
 
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
-        <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">링크 복사 📋</button>
+        <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">소환진 복사 📋</button>
         <button class="action-btn" onclick="resetCreate()">유령 소환 🕯</button>
     </div>
 </div>
@@ -289,7 +287,7 @@
         }
     });
 
-    // 링크 생성
+    // 소환진 생성
     function generateLink() {
         const text = document.getElementById('memoText').value;
         const password = document.getElementById('memoPassword').value;
@@ -321,13 +319,13 @@
         const base64Data = btoa(encodeURIComponent(JSON.stringify(dataPayload)));
         const shareLink = window.location.origin + window.location.pathname + "#" + base64Data;
 
-        document.getElementById('generateBtn').innerText = "링크 생성 완료 💀";
+        document.getElementById('generateBtn').innerText = "소환진 생성 완료 💀";
         document.getElementById('linkContainer').classList.remove('hidden');
         document.getElementById('linkBox').innerText = shareLink;
         document.getElementById('copyBtn').classList.remove('success');
     }
 
-    // 링크 복사
+    // 소환진 복사
     function copyToClipboard() {
         const linkText = document.getElementById('linkBox').innerText;
         navigator.clipboard.writeText(linkText).then(() => {
@@ -335,7 +333,7 @@
             copyBtn.classList.add('success');
             setTimeout(() => { copyBtn.classList.remove('success'); }, 600);
         }).catch(() => {
-            alert("링크 복사 실패 💀");
+            alert("소환진 복사 실패 💀");
         });
     }
 
@@ -357,7 +355,7 @@
         document.getElementById('memoPassword').value = '';
         document.getElementById('memoHint').value = '';
         document.getElementById('expiryTime').value = 'forever';
-        document.getElementById('generateBtn').innerText = "링크 생성";
+        document.getElementById('generateBtn').innerText = "소환진 생성";
         document.getElementById('linkContainer').classList.add('hidden');
     }
 
@@ -370,7 +368,7 @@
         document.getElementById('memoPassword').value = '';
         document.getElementById('memoHint').value = '';
         document.getElementById('expiryTime').value = 'forever';
-        document.getElementById('generateBtn').innerText = "링크 생성";
+        document.getElementById('generateBtn').innerText = "소환진 생성";
         document.getElementById('linkContainer').classList.add('hidden');
     }
 
@@ -420,7 +418,7 @@
             const decodedStr = decodeURIComponent(atob(hashData));
             dataObj = JSON.parse(decodedStr);
         } catch (e) {
-            if (!isAuto) alert("링크 오류 💀");
+            if (!isAuto) alert("소환진 오류 💀");
             return;
         }
 
