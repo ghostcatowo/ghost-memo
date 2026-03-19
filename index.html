@@ -38,15 +38,14 @@
 
         /* 상단 버튼 */
         .top-btns { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 100; }
-        .theme-toggle-btn, .clear-cache-btn { background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.3s; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
-        .theme-toggle-btn:hover, .clear-cache-btn:hover { transform: scale(1.1); }
+        .theme-toggle-btn, .clear-cache-btn, .manage-btn { background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.3s; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
+        .theme-toggle-btn:hover, .clear-cache-btn:hover, .manage-btn:hover { transform: scale(1.1); }
 
         /* 컨테이너 */
         .container { background: var(--container-bg); padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; max-width: 100%; text-align: center; border: 1px solid var(--border-color); transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s; }
         body.dark-mode .container { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 
         h2 { color: var(--text-color); margin-bottom: 25px; font-weight: bold; letter-spacing: 2px; }
-        .subtitle { color: var(--subtitle-color); font-size: 13px; margin-bottom: 25px; }
 
         /* 포스트잇 */
         .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; }
@@ -68,8 +67,8 @@
         button.copy-btn { margin-top: 10px; background-color: var(--border-color); color: var(--text-color); }
         button.copy-btn:hover { background-color: #cccccc; color: #000; }
         button.copy-btn.success { background-color: var(--copy-success-bg); color: var(--copy-success-text); }
-        button.delete-btn { margin-top: 10px; background-color: transparent; color: #ff4444; border: 1px solid #ff4444; }
-        button.delete-btn:hover { background-color: #ff4444; color: #ffffff; }
+        button.ghost-btn { margin-top: 10px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
+        button.ghost-btn:hover { background-color: var(--border-color); }
         .memo-action-row { display: flex; gap: 10px; margin-top: 15px; }
         .memo-action-row button { margin-top: 0; flex: 1; }
 
@@ -84,7 +83,7 @@
         #hint-display { font-size: 14px; color: var(--text-color); background: var(--border-color); padding: 10px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
 
         /* 로딩 */
-        #loading { font-size: 14px; color: var(--subtitle-color); margin-top: 15px; }
+        .loading-text { font-size: 14px; color: var(--subtitle-color); margin-top: 15px; }
 
         /* 유령 둥실 */
         @keyframes wavy-floating {
@@ -116,11 +115,44 @@
         .ghost-title { animation: ghost-blur 6s ease-in-out infinite; display: inline-block; }
         .ghost-title-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
+
+        /* 유령 관리 - 메모 목록 */
+        .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+
+        .memo-item { background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; position: relative; cursor: pointer; overflow: hidden; }
+        .memo-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
+
+        /* 줄노트 효과 */
+        .memo-item-header { padding: 14px 18px; font-size: 14px; color: #222222; font-weight: bold; background-image: repeating-linear-gradient(transparent, transparent 27px, #dddddd 27px, #dddddd 28px); min-height: 56px; line-height: 28px; padding-right: 36px; }
+
+        .memo-item-body { display: none; padding: 12px 18px 18px 18px; border-top: 1px dashed #cccccc; }
+        .memo-item-body.open { display: block; }
+
+        .memo-item-content { font-size: 13px; color: #333333; white-space: pre-wrap; line-height: 1.6; margin-bottom: 12px; background-image: repeating-linear-gradient(transparent, transparent 23px, #eeeeee 23px, #eeeeee 24px); padding-bottom: 4px; }
+
+        .memo-item-meta { font-size: 11px; color: #888888; margin-bottom: 10px; }
+
+        .memo-item-actions { display: flex; gap: 8px; }
+        .memo-item-actions button { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
+        .btn-delete { background-color: #222222; color: #ffffff; }
+        .btn-delete:hover { background-color: #444444; }
+        .btn-cancel { background-color: transparent; color: #222222; border: 1px solid #dddddd !important; }
+        .btn-cancel:hover { background-color: #f0f0f0; }
+
+        /* 삭제 확인 레이어 */
+        .delete-confirm { display: none; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 12px; margin-top: 8px; text-align: center; }
+        .delete-confirm.open { display: block; }
+        .delete-confirm p { font-size: 13px; color: #444444; margin-bottom: 10px; font-weight: bold; }
+        .delete-confirm-btns { display: flex; gap: 8px; }
+        .delete-confirm-btns button { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
+
+        .empty-msg { color: var(--subtitle-color); font-size: 14px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
 <div class="top-btns">
+    <button class="manage-btn" onclick="showManage()">🐈‍⬛</button>
     <button class="clear-cache-btn" onclick="clearSavedPasswords()">🗑️</button>
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
 </div>
@@ -160,8 +192,7 @@
     <div class="ghost-icon" id="view-ghost">👻</div>
     <h2 id="view-title">유령이 나타났습니다.</h2>
 
-    <!-- 로딩 -->
-    <div id="loading">불러오는 중... 👻</div>
+    <div id="view-loading" class="loading-text">불러오는 중... 👻</div>
 
     <!-- 만료/오류/삭제 시 -->
     <div id="expired-section" class="hidden">
@@ -184,16 +215,26 @@
             <button class="action-btn copy-btn" id="memoCopyBtn" onclick="copyMemoText()">유령 복사 📋</button>
             <button class="action-btn" onclick="goToCreate()">유령 소환 🕯</button>
         </div>
-        <!-- 작성자 기기에서만 보이는 삭제 버튼 -->
-        <button class="action-btn delete-btn hidden" id="deleteBtn" onclick="deleteMemo()">유령 소멸 🔥</button>
     </div>
+</div>
+
+<!-- 유령 관리 화면 -->
+<div class="container hidden" id="manage-mode">
+    <div class="ghost-icon">🐈‍⬛</div>
+    <h2 class="ghost-title-wrap"><span class="ghost-title">유령 관리</span></h2>
+
+    <div id="manage-loading" class="loading-text hidden">불러오는 중... 👻</div>
+    <div id="manage-empty" class="empty-msg hidden">소환된 유령이 없습니다. 👻</div>
+
+    <div id="memo-list" class="memo-list"></div>
+
+    <button class="action-btn ghost-btn" onclick="goToCreate()" style="margin-top: 20px;">돌아가기</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-    // Firebase 설정
     const firebaseConfig = {
         apiKey: "AIzaSyC0CigDd4zHuJiihvvznNFtF0Sm7hnyK28",
         authDomain: "ghost-memo-ce80f.firebaseapp.com",
@@ -225,7 +266,7 @@
         return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
     }
 
-    // 소환진 생성 (Firebase 저장)
+    // 소환진 생성
     window.generateMemo = async function() {
         const text = document.getElementById('memoText').value;
         const password = document.getElementById('memoPassword').value;
@@ -261,9 +302,9 @@
                 createdAt: now
             });
 
-            // 작성자 기기에 내 메모 ID 저장
+            // 내 메모 목록 저장 (암호 포함)
             const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
-            myMemos.push(memoId);
+            myMemos.push({ id: memoId, password: password, exp: expiryTimestamp, createdAt: now });
             if (myMemos.length > 20) myMemos.shift();
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
 
@@ -317,10 +358,11 @@
         document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 작성 화면으로 이동 + 초기화
+    // 작성 화면으로 이동
     window.goToCreate = function() {
         history.pushState('', document.title, window.location.pathname);
         document.getElementById('view-mode').classList.add('hidden');
+        document.getElementById('manage-mode').classList.add('hidden');
         document.getElementById('create-mode').classList.remove('hidden');
         document.getElementById('memoText').value = '';
         document.getElementById('memoPassword').value = '';
@@ -331,34 +373,142 @@
         document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 메모 삭제 (작성자 기기에서만)
-    window.deleteMemo = async function() {
-        const memoId = new URLSearchParams(window.location.search).get('id');
-        if (!memoId) return;
+    // 유령 관리 화면
+    window.showManage = async function() {
+        document.getElementById('create-mode').classList.add('hidden');
+        document.getElementById('view-mode').classList.add('hidden');
+        document.getElementById('manage-mode').classList.remove('hidden');
 
-        if (!confirm("유령을 소멸시키겠습니까? 💀")) return;
+        const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
+        const listEl = document.getElementById('memo-list');
+        const emptyEl = document.getElementById('manage-empty');
+        const loadingEl = document.getElementById('manage-loading');
 
+        listEl.innerHTML = '';
+
+        if (myMemos.length === 0) {
+            emptyEl.classList.remove('hidden');
+            return;
+        }
+
+        emptyEl.classList.add('hidden');
+        loadingEl.classList.remove('hidden');
+
+        const now = new Date().getTime();
+        let validMemos = [];
+
+        for (let memo of myMemos) {
+            // 만료된 메모 건너뜀
+            if (memo.exp !== "forever" && now > memo.exp) continue;
+
+            try {
+                const docSnap = await getDoc(doc(db, "memos", memo.id));
+                if (!docSnap.exists()) continue;
+
+                const data = docSnap.data();
+
+                // 내용 복호화 시도
+                let previewText = "🔒";
+                try {
+                    const bytes = CryptoJS.AES.decrypt(data.content, memo.password);
+                    const text = bytes.toString(CryptoJS.enc.Utf8);
+                    if (text) previewText = text.substring(0, 20) + (text.length > 20 ? "..." : "");
+                } catch {}
+
+                validMemos.push({ ...memo, previewText, fullContent: null, data });
+            } catch {}
+        }
+
+        loadingEl.classList.add('hidden');
+
+        // 만료된 메모 localStorage에서도 정리
+        const validIds = validMemos.map(m => m.id);
+        const cleaned = myMemos.filter(m => validIds.includes(m.id));
+        localStorage.setItem('ghost_my_memos', JSON.stringify(cleaned));
+
+        if (validMemos.length === 0) {
+            emptyEl.classList.remove('hidden');
+            return;
+        }
+
+        validMemos.forEach((memo, idx) => {
+            const expText = memo.exp === "forever" ? "영원히 떠도는 유령" : new Date(memo.exp).toLocaleString('ko-KR');
+            const createdText = new Date(memo.createdAt).toLocaleString('ko-KR');
+
+            const item = document.createElement('div');
+            item.className = 'memo-item';
+            item.innerHTML = `
+                <div class="memo-item-header" onclick="toggleMemoItem(${idx})">
+                    👻 ${memo.previewText}
+                </div>
+                <div class="memo-item-body" id="memo-body-${idx}">
+                    <div class="memo-item-meta">작성: ${createdText} · 소멸: ${expText}</div>
+                    <div class="memo-item-content" id="memo-content-${idx}">${getMemoContent(memo)}</div>
+                    <div class="memo-item-actions">
+                        <button class="btn-delete" onclick="showDeleteConfirm(${idx})">소환 해제 💀</button>
+                    </div>
+                    <div class="delete-confirm" id="delete-confirm-${idx}">
+                        <p>유령을 소환 해제하겠습니까?</p>
+                        <div class="delete-confirm-btns">
+                            <button class="btn-cancel" onclick="hideDeleteConfirm(${idx})">취소</button>
+                            <button class="btn-delete" onclick="confirmDelete('${memo.id}', ${idx})">소환 해제 💀</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            listEl.appendChild(item);
+        });
+
+        window._manageMemos = validMemos;
+    };
+
+    function getMemoContent(memo) {
+        try {
+            const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
+            const text = bytes.toString(CryptoJS.enc.Utf8);
+            return text || "🔒 복호화 실패";
+        } catch {
+            return "🔒 복호화 실패";
+        }
+    }
+
+    window.toggleMemoItem = function(idx) {
+        const body = document.getElementById(`memo-body-${idx}`);
+        body.classList.toggle('open');
+    };
+
+    window.showDeleteConfirm = function(idx) {
+        document.getElementById(`delete-confirm-${idx}`).classList.add('open');
+    };
+
+    window.hideDeleteConfirm = function(idx) {
+        document.getElementById(`delete-confirm-${idx}`).classList.remove('open');
+    };
+
+    window.confirmDelete = async function(memoId, idx) {
         try {
             await deleteDoc(doc(db, "memos", memoId));
 
-            // 내 메모 목록에서도 제거
             let myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
-            myMemos = myMemos.filter(id => id !== memoId);
+            myMemos = myMemos.filter(m => m.id !== memoId);
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
 
-            document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
-            document.getElementById('content-section').classList.add('hidden');
-            document.getElementById('expired-section').classList.remove('hidden');
-            document.getElementById('view-ghost').classList.add('ghost-vanish');
+            // 목록에서 제거
+            const item = document.getElementById(`memo-body-${idx}`).closest('.memo-item');
+            item.remove();
+
+            // 목록이 비었으면 안내 메시지
+            if (document.getElementById('memo-list').children.length === 0) {
+                document.getElementById('manage-empty').classList.remove('hidden');
+            }
         } catch (e) {
-            alert("소멸 실패 💀");
+            alert("소환 해제 실패 💀");
         }
     };
 
     // 열람 화면 로드
     async function loadMemo() {
         const memoId = new URLSearchParams(window.location.search).get('id');
-
         if (!memoId) return;
 
         document.getElementById('create-mode').classList.add('hidden');
@@ -366,11 +516,9 @@
 
         try {
             const docSnap = await getDoc(doc(db, "memos", memoId));
-
-            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('view-loading').classList.add('hidden');
 
             if (!docSnap.exists()) {
-                // 메모 없음 (삭제됐거나 없는 ID)
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
                 document.getElementById('view-ghost').classList.add('ghost-vanish');
@@ -379,27 +527,18 @@
 
             const data = docSnap.data();
 
-            // 만료 확인
             if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
                 document.getElementById('view-ghost').classList.add('ghost-vanish');
-                // 만료된 메모 Firebase에서 삭제
                 await deleteDoc(doc(db, "memos", memoId));
                 return;
             }
 
-            // 힌트 표시
             if (data.hint) {
                 const hintDiv = document.getElementById('hint-display');
                 hintDiv.innerText = "💀 힌트: " + data.hint;
                 hintDiv.classList.remove('hidden');
-            }
-
-            // 작성자 기기인지 확인 → 삭제 버튼 표시
-            const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
-            if (myMemos.includes(memoId)) {
-                document.getElementById('deleteBtn').classList.remove('hidden');
             }
 
             document.getElementById('password-section').classList.remove('hidden');
@@ -415,14 +554,13 @@
             }
 
         } catch (e) {
-            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('view-loading').classList.add('hidden');
             document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
             document.getElementById('expired-section').classList.remove('hidden');
             document.getElementById('view-ghost').classList.add('ghost-vanish');
         }
     }
 
-    // 복호화 시도
     function tryDecrypt(encryptedContent, password) {
         try {
             const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
@@ -433,7 +571,6 @@
         }
     }
 
-    // 암호로 메모 열기
     function unlockWithData(data, password, isAuto = false) {
         try {
             const bytes = CryptoJS.AES.decrypt(data.content, password);
@@ -457,7 +594,6 @@
         }
     }
 
-    // 유령 만나기 버튼
     window.unlockMemo = async function() {
         const password = document.getElementById('readPassword').value;
         const memoId = new URLSearchParams(window.location.search).get('id');
