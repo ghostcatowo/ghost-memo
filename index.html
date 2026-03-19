@@ -117,34 +117,35 @@
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
 
         /* 유령 관리 - 메모 목록 */
-        .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
 
-        .memo-item { background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; position: relative; cursor: pointer; overflow: hidden; }
-        .memo-item::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
+        .memo-item-wrap { display: flex; flex-direction: column; }
 
-        /* 줄노트 효과 */
-        .memo-item-header { padding: 14px 18px; font-size: 14px; color: #222222; font-weight: bold; background-image: repeating-linear-gradient(transparent, transparent 27px, #dddddd 27px, #dddddd 28px); min-height: 56px; line-height: 28px; padding-right: 36px; }
+        .memo-item-time { font-size: 11px; color: var(--subtitle-color); margin-bottom: 4px; text-align: left; padding-left: 2px; }
 
-        .memo-item-body { display: none; padding: 12px 18px 18px 18px; border-top: 1px dashed #cccccc; }
+        .memo-item-btn { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; text-align: left; box-sizing: border-box; transition: 0.3s; }
+        .memo-item-btn:hover { background-color: var(--btn-hover); }
+
+        .memo-item-body { display: none; margin-top: 6px; margin-bottom: 10px; }
         .memo-item-body.open { display: block; }
 
-        .memo-item-content { font-size: 13px; color: #333333; white-space: pre-wrap; line-height: 1.6; margin-bottom: 12px; background-image: repeating-linear-gradient(transparent, transparent 23px, #eeeeee 23px, #eeeeee 24px); padding-bottom: 4px; }
-
-        .memo-item-meta { font-size: 11px; color: #888888; margin-bottom: 10px; }
+        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; }
+        .memo-item-postit::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
+        .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; line-height: 1.6; padding: 16px 30px 20px 16px; }
 
         .memo-item-actions { display: flex; gap: 8px; }
-        .memo-item-actions button { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
-        .btn-delete { background-color: #222222; color: #ffffff; }
-        .btn-delete:hover { background-color: #444444; }
-        .btn-cancel { background-color: transparent; color: #222222; border: 1px solid #dddddd !important; }
-        .btn-cancel:hover { background-color: #f0f0f0; }
+        .memo-item-actions button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
+        .btn-delete { background-color: var(--btn-bg); color: var(--btn-text); }
+        .btn-delete:hover { background-color: var(--btn-hover); }
+        .btn-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color) !important; }
+        .btn-cancel:hover { background-color: var(--border-color); }
 
         /* 삭제 확인 레이어 */
-        .delete-confirm { display: none; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 12px; margin-top: 8px; text-align: center; }
+        .delete-confirm { display: none; margin-top: 8px; text-align: center; }
         .delete-confirm.open { display: block; }
-        .delete-confirm p { font-size: 13px; color: #444444; margin-bottom: 10px; font-weight: bold; }
+        .delete-confirm p { font-size: 13px; color: var(--subtitle-color); margin-bottom: 8px; }
         .delete-confirm-btns { display: flex; gap: 8px; }
-        .delete-confirm-btns button { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
+        .delete-confirm-btns button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
 
         .empty-msg { color: var(--subtitle-color); font-size: 14px; margin-top: 20px; }
     </style>
@@ -158,7 +159,7 @@
 </div>
 
 <!-- 작성 화면 -->
-<div class="container" id="create-mode">
+<div class="container hidden" id="create-mode">
     <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 메모</span></h2>
 
@@ -220,7 +221,7 @@
 
 <!-- 유령 관리 화면 -->
 <div class="container hidden" id="manage-mode">
-    <div class="ghost-icon">🐈‍⬛</div>
+    <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 관리</span></h2>
 
     <div id="manage-loading" class="loading-text hidden">불러오는 중... 👻</div>
@@ -323,28 +324,48 @@
         }
     };
 
+    // 클립보드 복사 (iOS 폴백 포함)
+    function copyText(text, successEl, failMsg) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                successEl.classList.add('success');
+                setTimeout(() => { successEl.classList.remove('success'); }, 600);
+            }).catch(() => {
+                fallbackCopy(text, successEl, failMsg);
+            });
+        } else {
+            fallbackCopy(text, successEl, failMsg);
+        }
+    }
+
+    function fallbackCopy(text, successEl, failMsg) {
+        try {
+            const el = document.createElement('textarea');
+            el.value = text;
+            el.style.position = 'fixed';
+            el.style.opacity = '0';
+            document.body.appendChild(el);
+            el.focus();
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            successEl.classList.add('success');
+            setTimeout(() => { successEl.classList.remove('success'); }, 600);
+        } catch {
+            alert(failMsg);
+        }
+    }
+
     // 소환진 복사
     window.copyToClipboard = function() {
         const linkText = document.getElementById('linkBox').innerText;
-        navigator.clipboard.writeText(linkText).then(() => {
-            const copyBtn = document.getElementById('copyBtn');
-            copyBtn.classList.add('success');
-            setTimeout(() => { copyBtn.classList.remove('success'); }, 600);
-        }).catch(() => {
-            alert("소환진 복사 실패 💀");
-        });
+        copyText(linkText, document.getElementById('copyBtn'), "소환진 복사 실패 💀");
     };
 
     // 메모 복사
     window.copyMemoText = function() {
         const memoText = document.getElementById('decryptedText').innerText;
-        navigator.clipboard.writeText(memoText).then(() => {
-            const btn = document.getElementById('memoCopyBtn');
-            btn.classList.add('success');
-            setTimeout(() => { btn.classList.remove('success'); }, 600);
-        }).catch(() => {
-            alert("메모 복사 실패 💀");
-        });
+        copyText(memoText, document.getElementById('memoCopyBtn'), "메모 복사 실패 💀");
     };
 
     // 새 메모 작성 초기화
@@ -432,18 +453,19 @@
         }
 
         validMemos.forEach((memo, idx) => {
-            const expText = memo.exp === "forever" ? "영원히 떠도는 유령" : new Date(memo.exp).toLocaleString('ko-KR');
-            const createdText = new Date(memo.createdAt).toLocaleString('ko-KR');
+            const createdDate = new Date(memo.createdAt);
+            const createdText = `${createdDate.getFullYear()}.${String(createdDate.getMonth()+1).padStart(2,'0')}.${String(createdDate.getDate()).padStart(2,'0')} ${String(createdDate.getHours()).padStart(2,'0')}:${String(createdDate.getMinutes()).padStart(2,'0')}`;
+            const content = getMemoContent(memo);
 
             const item = document.createElement('div');
-            item.className = 'memo-item';
+            item.className = 'memo-item-wrap';
             item.innerHTML = `
-                <div class="memo-item-header" onclick="toggleMemoItem(${idx})">
-                    👻 ${memo.previewText}
-                </div>
+                <div class="memo-item-time">${createdText}</div>
+                <button class="memo-item-btn" onclick="toggleMemoItem(${idx})">👻 ${memo.previewText}</button>
                 <div class="memo-item-body" id="memo-body-${idx}">
-                    <div class="memo-item-meta">작성: ${createdText} · 소멸: ${expText}</div>
-                    <div class="memo-item-content" id="memo-content-${idx}">${getMemoContent(memo)}</div>
+                    <div class="memo-item-postit">
+                        <div class="memo-item-content" id="memo-content-${idx}"></div>
+                    </div>
                     <div class="memo-item-actions">
                         <button class="btn-delete" onclick="showDeleteConfirm(${idx})">소환 해제 💀</button>
                     </div>
@@ -451,12 +473,16 @@
                         <p>유령을 소환 해제하겠습니까?</p>
                         <div class="delete-confirm-btns">
                             <button class="btn-cancel" onclick="hideDeleteConfirm(${idx})">취소</button>
-                            <button class="btn-delete" onclick="confirmDelete('${memo.id}', ${idx})">소환 해제 💀</button>
+                            <button class="btn-delete" onclick="confirmDelete('${memo.id}', ${idx})">확인 💀</button>
                         </div>
                     </div>
                 </div>
             `;
             listEl.appendChild(item);
+
+            // XSS 방지: 메모 내용은 textContent로 따로 설정
+            const contentEl = document.getElementById(`memo-content-${idx}`);
+            contentEl.textContent = content || "🔒 복호화 실패";
         });
 
         window._manageMemos = validMemos;
@@ -466,9 +492,9 @@
         try {
             const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
             const text = bytes.toString(CryptoJS.enc.Utf8);
-            return text || "🔒 복호화 실패";
+            return text || null;
         } catch {
-            return "🔒 복호화 실패";
+            return null;
         }
     }
 
@@ -493,8 +519,8 @@
             myMemos = myMemos.filter(m => m.id !== memoId);
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
 
-            // 목록에서 제거
-            const item = document.getElementById(`memo-body-${idx}`).closest('.memo-item');
+            // 목록에서 제거 (클래스명 수정)
+            const item = document.getElementById(`memo-body-${idx}`).closest('.memo-item-wrap');
             item.remove();
 
             // 목록이 비었으면 안내 메시지
@@ -624,6 +650,8 @@
         const memoId = new URLSearchParams(window.location.search).get('id');
         if (memoId) {
             loadMemo();
+        } else {
+            document.getElementById('create-mode').classList.remove('hidden');
         }
     };
 
