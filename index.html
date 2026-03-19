@@ -48,12 +48,12 @@
         h2 { color: var(--text-color); margin-bottom: 25px; font-weight: bold; letter-spacing: 2px; }
 
         /* 포스트잇 */
-        .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; }
+        .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; overflow: hidden; }
         .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); box-shadow: -2px -2px 5px rgba(0,0,0,0.1); border-bottom-left-radius: 2px; }
-        .post-it-input { width: 100%; height: 160px; background: transparent; border: none; resize: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; overflow-y: auto; }
+        .post-it-input { width: 100%; height: 160px; background: transparent; border: none; resize: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; overflow-y: auto; word-break: break-all; }
         .post-it-input:focus { outline: none; }
         .post-it-input::placeholder { color: #888888; font-weight: bold; }
-        .post-it-view { min-height: 120px; white-space: pre-wrap; line-height: 1.6; padding: 18px 25px 25px 18px; box-sizing: border-box; color: #222222; font-size: 14px; }
+        .post-it-view { min-height: 120px; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 18px 25px 25px 18px; box-sizing: border-box; color: #222222; font-size: 14px; }
 
         /* 입력 필드 */
         input, select { width: 100%; padding: 12px; margin: 10px 0; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
@@ -74,7 +74,7 @@
 
         .hidden { display: none; }
 
-        /* 소환진 박스 */
+        /* 링크 박스 */
         #linkBox { background: transparent; color: var(--text-color); padding: 15px; border-radius: 6px; word-break: break-all; font-size: 12px; border: 1px solid var(--border-color); margin-top: 20px; max-height: 70px; overflow-y: auto; text-align: left; }
         #linkBox::-webkit-scrollbar { width: 6px; }
         #linkBox::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 10px; }
@@ -117,21 +117,20 @@
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
 
         /* 유령 관리 - 메모 목록 */
-        .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+        .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
 
         .memo-item-wrap { display: flex; flex-direction: column; }
 
-        .memo-item-time { font-size: 11px; color: var(--subtitle-color); margin-bottom: 4px; text-align: left; padding-left: 2px; }
-
-        .memo-item-btn { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; text-align: left; box-sizing: border-box; transition: 0.3s; }
+        .memo-item-btn { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; text-align: left; box-sizing: border-box; transition: 0.3s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .memo-item-btn:hover { background-color: var(--btn-hover); }
 
-        .memo-item-body { display: none; margin-top: 6px; margin-bottom: 10px; }
+        .memo-item-body { display: none; margin-bottom: 6px; }
         .memo-item-body.open { display: block; }
 
-        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; }
+        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; overflow: hidden; }
         .memo-item-postit::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
-        .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; line-height: 1.6; padding: 16px 30px 20px 16px; }
+        .memo-item-time { font-size: 11px; color: #888888; padding: 10px 16px 0 16px; }
+        .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 6px 30px 20px 16px; }
 
         .memo-item-actions { display: flex; gap: 8px; }
         .memo-item-actions button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
@@ -179,11 +178,11 @@
         <option value="forever" selected>영원히 떠도는 유령</option>
     </select>
 
-    <button class="action-btn" id="generateBtn" onclick="generateMemo()">소환진 생성</button>
+    <button class="action-btn" id="generateBtn" onclick="generateMemo()">링크 생성</button>
 
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
-        <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">소환진 복사 📋</button>
+        <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">링크 복사 📋</button>
         <button class="action-btn" onclick="resetCreate()">유령 소환 🕯</button>
     </div>
 </div>
@@ -267,7 +266,7 @@
         return Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
     }
 
-    // 소환진 생성
+    // 링크 생성
     window.generateMemo = async function() {
         const text = document.getElementById('memoText').value;
         const password = document.getElementById('memoPassword').value;
@@ -311,15 +310,15 @@
 
             const shareLink = window.location.origin + window.location.pathname + "?id=" + memoId;
 
-            btn.innerText = "소환진 생성 완료 💀";
+            btn.innerText = "링크 생성 완료 💀";
             btn.disabled = false;
             document.getElementById('linkContainer').classList.remove('hidden');
             document.getElementById('linkBox').innerText = shareLink;
             document.getElementById('copyBtn').classList.remove('success');
 
         } catch (e) {
-            alert("소환진 생성 실패 💀");
-            btn.innerText = "소환진 생성";
+            alert("링크 생성 실패 💀");
+            btn.innerText = "링크 생성";
             btn.disabled = false;
         }
     };
@@ -356,10 +355,10 @@
         }
     }
 
-    // 소환진 복사
+    // 링크 복사
     window.copyToClipboard = function() {
         const linkText = document.getElementById('linkBox').innerText;
-        copyText(linkText, document.getElementById('copyBtn'), "소환진 복사 실패 💀");
+        copyText(linkText, document.getElementById('copyBtn'), "링크 복사 실패 💀");
     };
 
     // 메모 복사
@@ -374,7 +373,7 @@
         document.getElementById('memoPassword').value = '';
         document.getElementById('memoHint').value = '';
         document.getElementById('expiryTime').value = 'forever';
-        document.getElementById('generateBtn').innerText = "소환진 생성";
+        document.getElementById('generateBtn').innerText = "링크 생성";
         document.getElementById('generateBtn').disabled = false;
         document.getElementById('linkContainer').classList.add('hidden');
     };
@@ -389,7 +388,7 @@
         document.getElementById('memoPassword').value = '';
         document.getElementById('memoHint').value = '';
         document.getElementById('expiryTime').value = 'forever';
-        document.getElementById('generateBtn').innerText = "소환진 생성";
+        document.getElementById('generateBtn').innerText = "링크 생성";
         document.getElementById('generateBtn').disabled = false;
         document.getElementById('linkContainer').classList.add('hidden');
     };
@@ -460,10 +459,10 @@
             const item = document.createElement('div');
             item.className = 'memo-item-wrap';
             item.innerHTML = `
-                <div class="memo-item-time">${createdText}</div>
                 <button class="memo-item-btn" onclick="toggleMemoItem(${idx})">👻 ${memo.previewText}</button>
                 <div class="memo-item-body" id="memo-body-${idx}">
                     <div class="memo-item-postit">
+                        <div class="memo-item-time">${createdText}</div>
                         <div class="memo-item-content" id="memo-content-${idx}"></div>
                     </div>
                     <div class="memo-item-actions">
@@ -627,12 +626,12 @@
         try {
             const docSnap = await getDoc(doc(db, "memos", memoId));
             if (!docSnap.exists()) {
-                alert("소환진 오류 💀");
+                alert("링크 오류 💀");
                 return;
             }
             unlockWithData(docSnap.data(), password, false);
         } catch (e) {
-            alert("소환진 오류 💀");
+            alert("링크 오류 💀");
         }
     };
 
