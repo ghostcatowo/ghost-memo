@@ -148,6 +148,7 @@
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
         <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">링크 복사 📋</button>
+        <button class="action-btn" onclick="resetCreate()">새 메모 작성 ✏️</button>
     </div>
 </div>
 
@@ -348,6 +349,16 @@
         }).catch(() => {
             alert("메모 복사 실패 💀");
         });
+    }
+
+    // 새 메모 작성 초기화
+    function resetCreate() {
+        document.getElementById('memoText').value = '';
+        document.getElementById('memoPassword').value = '';
+        document.getElementById('memoHint').value = '';
+        document.getElementById('expiryTime').value = 'forever';
+        document.getElementById('generateBtn').innerText = "링크 생성";
+        document.getElementById('linkContainer').classList.add('hidden');
     }
 
     // 작성 화면으로 이동 + 초기화
