@@ -34,41 +34,35 @@
             --copy-success-text: #ffffff;
         }
 
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 80px 20px 40px; box-sizing: border-box; margin: 0; transition: background-color 0.4s, color 0.4s; position: relative; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 80px 20px 40px; box-sizing: border-box; margin: 0; position: relative; }
 
         /* 상단 버튼 */
         .top-btns { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 100; }
-        .theme-toggle-btn, .clear-cache-btn, .manage-btn { background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.3s; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
-        .theme-toggle-btn:hover, .clear-cache-btn:hover, .manage-btn:hover { transform: scale(1.1); }
+        .theme-toggle-btn, .clear-cache-btn, .manage-btn { background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
 
         /* 컨테이너 */
-        .container { background: var(--container-bg); padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; max-width: 100%; text-align: center; border: 1px solid var(--border-color); transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s; }
+        .container { background: var(--container-bg); padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; max-width: 100%; text-align: center; border: 1px solid var(--border-color); }
         body.dark-mode .container { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 
         h2 { color: var(--text-color); margin-bottom: 25px; font-weight: bold; letter-spacing: 2px; }
 
         /* 포스트잇 */
         .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; overflow: hidden; }
-        .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); box-shadow: -2px -2px 5px rgba(0,0,0,0.1); border-bottom-left-radius: 2px; }
+        .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
         .post-it-input { width: 100%; height: 160px; background: transparent; border: none; resize: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; overflow-y: auto; word-break: break-all; }
         .post-it-input:focus { outline: none; }
         .post-it-input::placeholder { color: #888888; font-weight: bold; }
         .post-it-view { min-height: 120px; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 18px 25px 25px 18px; box-sizing: border-box; color: #222222; font-size: 14px; }
 
         /* 입력 필드 */
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
-        input::placeholder { color: var(--subtitle-color); }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         input:focus, select:focus { outline: none; border-color: var(--text-color); }
-        select option { background-color: var(--container-bg); color: var(--text-color); }
 
         /* 버튼 */
-        button.action-btn { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 15px; transition: 0.3s; box-sizing: border-box; }
-        button.action-btn:hover { background-color: var(--btn-hover); }
+        button.action-btn { background-color: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 15px; box-sizing: border-box; }
         button.copy-btn { margin-top: 10px; background-color: var(--border-color); color: var(--text-color); }
-        button.copy-btn:hover { background-color: #cccccc; color: #000; }
         button.copy-btn.success { background-color: var(--copy-success-bg); color: var(--copy-success-text); }
         button.ghost-btn { margin-top: 10px; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); }
-        button.ghost-btn:hover { background-color: var(--border-color); }
         .memo-action-row { display: flex; gap: 10px; margin-top: 15px; }
         .memo-action-row button { margin-top: 0; flex: 1; }
 
@@ -76,8 +70,6 @@
 
         /* 링크 박스 */
         #linkBox { background: transparent; color: var(--text-color); padding: 15px; border-radius: 6px; word-break: break-all; font-size: 12px; border: 1px solid var(--border-color); margin-top: 20px; max-height: 70px; overflow-y: auto; text-align: left; }
-        #linkBox::-webkit-scrollbar { width: 6px; }
-        #linkBox::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 10px; }
 
         /* 힌트 */
         #hint-display { font-size: 14px; color: var(--text-color); background: var(--border-color); padding: 10px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
@@ -106,81 +98,66 @@
 
         /* 타이틀 번짐 */
         @keyframes ghost-blur {
-            0%   { filter: blur(0px);   opacity: 1;   text-shadow: 0 0 0px rgba(100,100,100,0); }
-            30%  { filter: blur(3px);   opacity: 0.6; text-shadow: 0 0 12px rgba(120,120,120,0.6); }
-            55%  { filter: blur(1.5px); opacity: 0.8; text-shadow: 0 0 6px rgba(120,120,120,0.3); }
-            75%  { filter: blur(4px);   opacity: 0.5; text-shadow: 0 0 18px rgba(100,100,100,0.7); }
-            100% { filter: blur(0px);   opacity: 1;   text-shadow: 0 0 0px rgba(100,100,100,0); }
+            0%   { filter: blur(0px); opacity: 1; }
+            30%  { filter: blur(3px); opacity: 0.6; }
+            100% { filter: blur(0px); opacity: 1; }
         }
         .ghost-title { animation: ghost-blur 6s ease-in-out infinite; display: inline-block; }
         .ghost-title-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
 
-        /* 유령 관리 - 메모 목록 */
+        /* 관리창 목록 */
         .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
-
         .memo-item-wrap { display: flex; flex-direction: column; }
 
-        .memo-item-btn { 
-            background-color: transparent; 
-            color: var(--text-color); 
-            border: none; 
-            padding: 14px 4px; 
-            width: 100%; 
-            border-radius: 0; 
-            cursor: pointer; 
-            font-weight: 500; 
-            font-size: 15px; 
-            text-align: left; 
-            box-sizing: border-box; 
-            display: flex; 
+        .memo-item-btn {
+            background-color: transparent;
+            color: var(--text-color);
+            border: none;
+            padding: 14px 4px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            text-align: left;
+            box-sizing: border-box;
+            display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s;
         }
-        .memo-item-btn:hover { 
-            background-color: rgba(128, 128, 128, 0.08); 
-            padding-left: 10px; 
-        }
-
-        /* 텍스트 부분에만 밑줄 적용 */
         .memo-item-text {
             border-bottom: 1px dashed var(--subtitle-color);
             padding-bottom: 2px;
             flex: 1;
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            white-space: nowrap; 
-            transition: border-bottom 0.2s;
-        }
-        .memo-item-btn:hover .memo-item-text {
-            border-bottom: 1px solid var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .memo-item-body { display: none; margin-top: 15px; margin-bottom: 6px; } 
+        .memo-item-body { display: none; margin-top: 10px; margin-bottom: 6px; }
         .memo-item-body.open { display: block; }
 
-        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; overflow: hidden; }
+        /* 관리창 포스트잇 */
+        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 10px; overflow: hidden; }
         .memo-item-postit::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); border-bottom-left-radius: 2px; }
         .memo-item-time { font-size: 11px; color: #888888; padding: 10px 16px 0 16px; }
         .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 6px 30px 20px 16px; }
-        
-        /* 굵기 속성(font-weight) 폰트 기본값(normal)으로 원상 복구 */
-        .memo-item-content a, .post-it-view a { color: var(--text-color); text-decoration: underline; word-break: break-all; font-weight: normal; } 
 
+        /* 링크 스타일 */
+        .memo-item-content a, .post-it-view a { color: var(--text-color); text-decoration: underline; word-break: break-all; font-weight: normal; }
+
+        /* 관리창 액션 버튼 */
         .memo-item-actions { display: flex; gap: 8px; }
-        .memo-item-actions button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
+        .memo-item-actions button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; }
         .btn-delete { background-color: var(--btn-bg); color: var(--btn-text); }
-        .btn-delete:hover { background-color: var(--btn-hover); }
         .btn-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color) !important; }
-        .btn-cancel:hover { background-color: var(--border-color); }
 
-        /* 삭제 확인 레이어 */
+        /* 삭제 확인 */
         .delete-confirm { display: none; margin-top: 8px; text-align: center; }
         .delete-confirm.open { display: block; }
         .delete-confirm p { font-size: 13px; color: var(--subtitle-color); margin-bottom: 8px; }
         .delete-confirm-btns { display: flex; gap: 8px; }
-        .delete-confirm-btns button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; transition: 0.2s; }
+        .delete-confirm-btns button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; }
 
         .empty-msg { color: var(--subtitle-color); font-size: 14px; margin-top: 20px; }
     </style>
@@ -193,28 +170,23 @@
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
 </div>
 
+<!-- 작성 화면 -->
 <div class="container hidden" id="create-mode">
     <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 메모</span></h2>
-
     <div class="post-it-wrapper">
         <textarea id="memoText" class="post-it-input" placeholder="🔒 비밀 유령 입니다"></textarea>
     </div>
-
     <input type="password" id="memoPassword" placeholder="암호 설정 (필수)">
     <input type="text" id="memoHint" placeholder="암호 힌트 (선택)">
-
     <select id="expiryTime">
-        <option value="1m">1분 후 소멸 (테스트용)</option>
         <option value="1">1시간 후 소멸</option>
-        <option value="3">3시간 후 소멸</option>
         <option value="5">5시간 후 소멸</option>
         <option value="24">1일 후 소멸</option>
-        <option value="forever" selected>영원히 떠도는 유령</option>
+        <option value="72">3일 후 소멸</option>
+        <option value="forever" selected>Ghost never dies</option>
     </select>
-
     <button class="action-btn" id="generateBtn" onclick="generateMemo()">링크 생성</button>
-
     <div id="linkContainer" class="hidden">
         <div id="linkBox"></div>
         <button class="action-btn copy-btn" id="copyBtn" onclick="copyToClipboard()">링크 복사 📋</button>
@@ -222,22 +194,19 @@
     </div>
 </div>
 
+<!-- 열람 화면 -->
 <div class="container hidden" id="view-mode">
     <div class="ghost-icon" id="view-ghost">👻</div>
     <h2 id="view-title">유령이 나타났습니다.</h2>
-
-    <div id="view-loading" class="loading-text">데려오는 중... 👻</div>
-
+    <div id="view-loading" class="loading-text">유령 데려오는 중... 👻</div>
     <div id="expired-section" class="hidden">
         <button class="action-btn" onclick="goToCreate()">유령 소환 🕯</button>
     </div>
-
     <div id="password-section" class="hidden">
         <div id="hint-display" class="hidden"></div>
         <input type="password" id="readPassword" placeholder="암호 입력">
         <button class="action-btn" onclick="unlockMemo()">유령 만나기</button>
     </div>
-
     <div id="content-section" class="hidden">
         <div class="post-it-wrapper">
             <div class="post-it-view" id="decryptedText"></div>
@@ -249,16 +218,14 @@
     </div>
 </div>
 
+<!-- 관리 화면 -->
 <div class="container hidden" id="manage-mode">
     <div class="ghost-icon">👻</div>
     <h2 class="ghost-title-wrap"><span class="ghost-title">유령 관리</span></h2>
-
-    <div id="manage-loading" class="loading-text hidden">데려오는 중... 👻</div>
+    <div id="manage-loading" class="loading-text hidden">유령 데려오는 중... 👻</div>
     <div id="manage-empty" class="empty-msg hidden">소환된 유령이 없습니다. 👻</div>
-
     <div id="memo-list" class="memo-list"></div>
-
-    <button class="action-btn ghost-btn" onclick="goToCreate()" style="margin-top: 20px;">돌아가기</button>
+    <button class="action-btn ghost-btn" onclick="goToCreate()" style="margin-top: 10px;">돌아가기</button>
 </div>
 
 <script type="module">
@@ -291,12 +258,12 @@
         alert("저장 암호 삭제 완료 💀");
     };
 
-    // 랜덤 ID 생성 (6자리로 짧게 수정)
+    // 랜덤 ID 생성 (8자리)
     function generateId() {
-        return Math.random().toString(36).substring(2, 8);
+        return Math.random().toString(36).substring(2, 10);
     }
 
-    // URL을 클릭 가능한 링크로 변환 (XSS 방지 포함)
+    // URL 자동 링크 변환 (XSS 방지 포함)
     function linkify(text) {
         const div = document.createElement('div');
         div.innerText = text;
@@ -305,7 +272,7 @@
         return safeText.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
     }
 
-    // 링크 생성
+    // 링크 생성 및 Firebase 저장
     window.generateMemo = async function() {
         const text = document.getElementById('memoText').value;
         const password = document.getElementById('memoPassword').value;
@@ -313,20 +280,17 @@
         const expiry = document.getElementById('expiryTime').value;
 
         if (!text || !password) {
-            alert("메모,암호 확인 💀");
+            alert("메모 암호 확인 💀");
             return;
         }
 
         const btn = document.getElementById('generateBtn');
-        btn.innerText = "소환 중... 👻";
+        btn.innerText = "유령 소환 중... 👻";
         btn.disabled = true;
 
         const now = new Date().getTime();
         let expiryTimestamp = "forever";
-
-        if (expiry === "1m") {
-            expiryTimestamp = now + (1 * 60 * 1000);
-        } else if (expiry !== "forever") {
+        if (expiry !== "forever") {
             expiryTimestamp = now + (parseInt(expiry) * 60 * 60 * 1000);
         }
 
@@ -341,14 +305,13 @@
                 createdAt: now
             });
 
-            // 내 메모 목록 저장 (암호 포함)
+            // 내 메모 목록 저장 (관리창용, 암호 포함)
             const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
             myMemos.push({ id: memoId, password: password, exp: expiryTimestamp, createdAt: now });
             if (myMemos.length > 20) myMemos.shift();
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
 
             const shareLink = window.location.origin + window.location.pathname + "?id=" + memoId;
-
             btn.innerText = "링크 생성 완료 💀";
             btn.disabled = false;
             document.getElementById('linkContainer').classList.remove('hidden');
@@ -368,9 +331,7 @@
             navigator.clipboard.writeText(text).then(() => {
                 successEl.classList.add('success');
                 setTimeout(() => { successEl.classList.remove('success'); }, 600);
-            }).catch(() => {
-                fallbackCopy(text, successEl, failMsg);
-            });
+            }).catch(() => { fallbackCopy(text, successEl, failMsg); });
         } else {
             fallbackCopy(text, successEl, failMsg);
         }
@@ -389,21 +350,17 @@
             document.body.removeChild(el);
             successEl.classList.add('success');
             setTimeout(() => { successEl.classList.remove('success'); }, 600);
-        } catch {
-            alert(failMsg);
-        }
+        } catch { alert(failMsg); }
     }
 
     // 링크 복사
     window.copyToClipboard = function() {
-        const linkText = document.getElementById('linkBox').innerText;
-        copyText(linkText, document.getElementById('copyBtn'), "링크 복사 실패 💀");
+        copyText(document.getElementById('linkBox').innerText, document.getElementById('copyBtn'), "링크 복사 실패 💀");
     };
 
     // 메모 복사
     window.copyMemoText = function() {
-        const memoText = document.getElementById('decryptedText').innerText;
-        copyText(memoText, document.getElementById('memoCopyBtn'), "메모 복사 실패 💀");
+        copyText(document.getElementById('decryptedText').innerText, document.getElementById('memoCopyBtn'), "메모 복사 실패 💀");
     };
 
     // 새 메모 작성 초기화
@@ -417,7 +374,7 @@
         document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 작성 화면으로 이동
+    // 작성 화면으로 이동 + 폼 초기화
     window.goToCreate = function() {
         history.pushState('', document.title, window.location.pathname);
         document.getElementById('view-mode').classList.add('hidden');
@@ -432,7 +389,7 @@
         document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 유령 관리 화면
+    // 관리 화면 표시
     window.showManage = async function() {
         document.getElementById('create-mode').classList.add('hidden');
         document.getElementById('view-mode').classList.add('hidden');
@@ -444,12 +401,7 @@
         const loadingEl = document.getElementById('manage-loading');
 
         listEl.innerHTML = '';
-
-        if (myMemos.length === 0) {
-            emptyEl.classList.remove('hidden');
-            return;
-        }
-
+        if (myMemos.length === 0) { emptyEl.classList.remove('hidden'); return; }
         emptyEl.classList.add('hidden');
         loadingEl.classList.remove('hidden');
 
@@ -457,51 +409,41 @@
         let validMemos = [];
 
         for (let memo of myMemos) {
-            // 만료된 메모 건너뜀
             if (memo.exp !== "forever" && now > memo.exp) continue;
-
             try {
                 const docSnap = await getDoc(doc(db, "memos", memo.id));
                 if (!docSnap.exists()) continue;
-
                 const data = docSnap.data();
-
-                // 내용 복호화 시도
-                let previewText = "💀";
+                let previewText = "🔒";
                 try {
                     const bytes = CryptoJS.AES.decrypt(data.content, memo.password);
                     const text = bytes.toString(CryptoJS.enc.Utf8);
                     if (text) previewText = text.substring(0, 20) + (text.length > 20 ? "..." : "");
                 } catch {}
-
-                validMemos.push({ ...memo, previewText, fullContent: null, data });
+                validMemos.push({ ...memo, previewText, data });
             } catch {}
         }
 
         loadingEl.classList.add('hidden');
 
-        // 만료된 메모 localStorage에서도 정리
+        // 만료/삭제된 메모 localStorage 정리
         const validIds = validMemos.map(m => m.id);
-        const cleaned = myMemos.filter(m => validIds.includes(m.id));
-        localStorage.setItem('ghost_my_memos', JSON.stringify(cleaned));
+        localStorage.setItem('ghost_my_memos', JSON.stringify(
+            myMemos.filter(m => validIds.includes(m.id))
+        ));
 
-        if (validMemos.length === 0) {
-            emptyEl.classList.remove('hidden');
-            return;
-        }
+        if (validMemos.length === 0) { emptyEl.classList.remove('hidden'); return; }
 
         validMemos.forEach((memo, idx) => {
-            const createdDate = new Date(memo.createdAt);
-            const createdText = `${createdDate.getFullYear()}.${String(createdDate.getMonth()+1).padStart(2,'0')}.${String(createdDate.getDate()).padStart(2,'0')} ${String(createdDate.getHours()).padStart(2,'0')}:${String(createdDate.getMinutes()).padStart(2,'0')}`;
-            const content = getMemoContent(memo);
+            const d = new Date(memo.createdAt);
+            const createdText = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 
             const item = document.createElement('div');
             item.className = 'memo-item-wrap';
-            
-            // 텍스트 밑에만 밑줄 적용을 위해 <span class="memo-item-text"> 로 감쌌습니다.
             item.innerHTML = `
                 <button class="memo-item-btn" onclick="toggleMemoItem(${idx})">
-                    <span style="font-size: 16px;">👻</span> <span class="memo-item-text">${memo.previewText}</span>
+                    <span style="font-size:16px;">👻</span>
+                    <span class="memo-item-text">${memo.previewText}</span>
                 </button>
                 <div class="memo-item-body" id="memo-body-${idx}">
                     <div class="memo-item-postit">
@@ -522,60 +464,33 @@
             `;
             listEl.appendChild(item);
 
-            // 링크 적용하여 내용 표시
+            // XSS 방지: 내용은 linkify 후 innerHTML로
             const contentEl = document.getElementById(`memo-content-${idx}`);
-            if (content) {
-                contentEl.innerHTML = linkify(content);
-            } else {
-                contentEl.innerText = "💀 복호화 실패";
-            }
+            try {
+                const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
+                const content = bytes.toString(CryptoJS.enc.Utf8);
+                contentEl.innerHTML = content ? linkify(content) : "복호화 실패 💀";
+            } catch { contentEl.innerText = "복호화 실패 💀"; }
         });
-
-        window._manageMemos = validMemos;
     };
 
-    function getMemoContent(memo) {
-        try {
-            const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
-            const text = bytes.toString(CryptoJS.enc.Utf8);
-            return text || null;
-        } catch {
-            return null;
-        }
-    }
+    // 목록 아이템 토글
+    window.toggleMemoItem = function(idx) { document.getElementById(`memo-body-${idx}`).classList.toggle('open'); };
+    window.showDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.add('open'); };
+    window.hideDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.remove('open'); };
 
-    window.toggleMemoItem = function(idx) {
-        const body = document.getElementById(`memo-body-${idx}`);
-        body.classList.toggle('open');
-    };
-
-    window.showDeleteConfirm = function(idx) {
-        document.getElementById(`delete-confirm-${idx}`).classList.add('open');
-    };
-
-    window.hideDeleteConfirm = function(idx) {
-        document.getElementById(`delete-confirm-${idx}`).classList.remove('open');
-    };
-
+    // 메모 삭제
     window.confirmDelete = async function(memoId, idx) {
         try {
             await deleteDoc(doc(db, "memos", memoId));
-
             let myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
             myMemos = myMemos.filter(m => m.id !== memoId);
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
-
-            // 목록에서 제거
-            const item = document.getElementById(`memo-body-${idx}`).closest('.memo-item-wrap');
-            item.remove();
-
-            // 목록이 비었으면 안내 메시지
+            document.getElementById(`memo-body-${idx}`).closest('.memo-item-wrap').remove();
             if (document.getElementById('memo-list').children.length === 0) {
                 document.getElementById('manage-empty').classList.remove('hidden');
             }
-        } catch (e) {
-            alert("소환 해제 실패 💀");
-        }
+        } catch (e) { alert("소환 해제 실패 💀"); }
     };
 
     // 열람 화면 로드
@@ -599,6 +514,7 @@
 
             const data = docSnap.data();
 
+            // 만료 확인
             if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
@@ -607,6 +523,7 @@
                 return;
             }
 
+            // 힌트 표시
             if (data.hint) {
                 const hintDiv = document.getElementById('hint-display');
                 hintDiv.innerText = "💀 힌트: " + data.hint;
@@ -615,7 +532,7 @@
 
             document.getElementById('password-section').classList.remove('hidden');
 
-            // 자동 암호 시도
+            // 저장된 암호로 자동 해독 시도
             const savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
             for (let savedPass of savedPasswords) {
                 if (tryDecrypt(data.content, savedPass)) {
@@ -626,6 +543,7 @@
             }
 
         } catch (e) {
+            // Firebase 오류 시 안내 표시
             document.getElementById('view-loading').classList.add('hidden');
             document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
             document.getElementById('expired-section').classList.remove('hidden');
@@ -633,23 +551,22 @@
         }
     }
 
+    // 복호화 시도
     function tryDecrypt(encryptedContent, password) {
         try {
             const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
-            const text = bytes.toString(CryptoJS.enc.Utf8);
-            return !!text;
-        } catch {
-            return false;
-        }
+            return !!bytes.toString(CryptoJS.enc.Utf8);
+        } catch { return false; }
     }
 
+    // 암호로 메모 열기
     function unlockWithData(data, password, isAuto = false) {
         try {
             const bytes = CryptoJS.AES.decrypt(data.content, password);
             const originalText = bytes.toString(CryptoJS.enc.Utf8);
+            if (!originalText) throw new Error();
 
-            if (!originalText) throw new Error("Wrong Password");
-
+            // 열람 암호 캐싱 (자동입력용)
             let savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
             if (!savedPasswords.includes(password)) {
                 savedPasswords.push(password);
@@ -659,29 +576,20 @@
 
             document.getElementById('password-section').classList.add('hidden');
             document.getElementById('content-section').classList.remove('hidden');
-            
-            // 링크 변환 적용
             document.getElementById('decryptedText').innerHTML = linkify(originalText);
 
-        } catch (e) {
-            if (!isAuto) alert("암호 오류 💀");
-        }
+        } catch (e) { if (!isAuto) alert("암호 오류 💀"); }
     }
 
+    // 유령 만나기 버튼
     window.unlockMemo = async function() {
         const password = document.getElementById('readPassword').value;
         const memoId = new URLSearchParams(window.location.search).get('id');
-
         try {
             const docSnap = await getDoc(doc(db, "memos", memoId));
-            if (!docSnap.exists()) {
-                alert("링크 오류 💀");
-                return;
-            }
-            unlockWithData(docSnap.data(), password, false);
-        } catch (e) {
-            alert("링크 오류 💀");
-        }
+            if (docSnap.exists()) unlockWithData(docSnap.data(), password, false);
+            else alert("링크 오류 💀");
+        } catch (e) { alert("링크 오류 💀"); }
     };
 
     // 초기 로드
@@ -690,20 +598,12 @@
         if (savedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             document.getElementById('themeBtn').innerText = '☀️';
-        } else {
-            document.body.classList.remove('dark-mode');
-            document.getElementById('themeBtn').innerText = '🌙';
         }
-
         const memoId = new URLSearchParams(window.location.search).get('id');
-        if (memoId) {
-            loadMemo();
-        } else {
-            document.getElementById('create-mode').classList.remove('hidden');
-        }
+        if (memoId) loadMemo();
+        else document.getElementById('create-mode').classList.remove('hidden');
     };
 
 </script>
-
 </body>
 </html>
