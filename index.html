@@ -37,7 +37,7 @@
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 80px 20px 40px; box-sizing: border-box; margin: 0; position: relative; }
 
         /* 상단 버튼 */
-        .top-btns { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; z-index: 100; }
+        .top-btns { position: absolute; top: 20px; right: 20px; display: flex; gap: 2px; z-index: 100; }
         .theme-toggle-btn, .clear-cache-btn, .manage-btn { background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
 
         /* 컨테이너 */
@@ -47,7 +47,7 @@
         h2 { color: var(--text-color); margin-bottom: 25px; font-weight: bold; letter-spacing: 2px; }
 
         /* 포스트잇 */
-        .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #f5f5f5 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; overflow: hidden; }
+        .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #f5f5f5 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; overflow: hidden; border: 1px solid #dddddd; }
         .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #dddddd 50%); border-bottom-left-radius: 2px; }
         .post-it-input { width: 100%; height: 160px; background: transparent; border: none; resize: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; overflow-y: auto; word-break: break-all; }
         .post-it-input:focus { outline: none; }
@@ -138,7 +138,7 @@
         .memo-item-body.open { display: block; }
 
         /* 관리창 포스트잇 */
-        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #f5f5f5 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; overflow: hidden; }
+        .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #f5f5f5 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; overflow: hidden; border: 1px solid #dddddd; }
         .memo-item-postit::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #dddddd 50%); border-bottom-left-radius: 2px; }
         .memo-item-time { font-size: 11px; color: #888888; padding: 10px 16px 0 16px; }
         .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 6px 30px 20px 16px; }
@@ -149,7 +149,7 @@
 
         /* 관리창 액션 버튼 */
         .memo-item-actions { display: flex; gap: 8px; margin-bottom: 0; }
-        .memo-item-actions button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; }
+        .memo-item-actions button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; box-sizing: border-box; }
         .btn-delete { background-color: var(--btn-bg); color: var(--btn-text); }
         .btn-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color) !important; }
 
@@ -158,7 +158,7 @@
         .delete-confirm.open { display: block; }
         .delete-confirm p { font-size: 13px; color: var(--subtitle-color); margin-bottom: 8px; }
         .delete-confirm-btns { display: flex; gap: 8px; }
-        .delete-confirm-btns button { flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; border: 1px solid transparent; box-sizing: border-box; }
+        .delete-confirm-btns button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; box-sizing: border-box; }
 
         .empty-msg { color: var(--subtitle-color); font-size: 14px; margin-top: 20px; }
     </style>
