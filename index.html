@@ -294,6 +294,8 @@
         let expiryTimestamp = "forever";
         if (expiry !== "forever") {
             expiryTimestamp = now + (parseInt(expiry) * 60 * 60 * 1000);
+        } else {
+            expiryTimestamp = now + (180 * 24 * 60 * 60 * 1000);
         }
 
         const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
