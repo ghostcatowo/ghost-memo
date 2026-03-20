@@ -182,10 +182,10 @@
     <input type="password" id="memoPassword" placeholder="암호 설정 (필수)">
     <input type="text" id="memoHint" placeholder="암호 힌트 (선택)">
     <select id="expiryTime">
-        <option value="1">1시간 후 소멸</option>
-        <option value="5">5시간 후 소멸</option>
+        <option value="3">3시간 후 소멸</option>
+        <option value="6">6시간 후 소멸</option>
+        <option value="12">12시간 후 소멸</option>
         <option value="24">1일 후 소멸</option>
-        <option value="72">3일 후 소멸</option>
         <option value="forever" selected>Ghost never dies</option>
     </select>
     <button class="action-btn" id="generateBtn" onclick="generateMemo()">링크 생성</button>
@@ -232,7 +232,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyC0CigDd4zHuJiihvvznNFtF0Sm7hnyK28",
@@ -300,11 +300,12 @@
         const memoId = generateId();
 
         try {
-            await setDoc(doc(db, "memos", memoId), {
+            await setDoc(doc(db, "ghost-memo", memoId), {
                 content: encryptedText,
                 exp: expiryTimestamp,
                 hint: hint,
-                createdAt: now
+                createdAt: Timestamp.now(),
+                autoDeleteAt: Timestamp.fromMillis(Date.now() + (180 * 24 * 60 * 60 * 1000))
             });
 
             // 내 메모 목록 저장 (관리창용, 암호 포함)
@@ -413,7 +414,7 @@
         for (let memo of myMemos) {
             if (memo.exp !== "forever" && now > memo.exp) continue;
             try {
-                const docSnap = await getDoc(doc(db, "memos", memo.id));
+                const docSnap = await getDoc(doc(db, "ghost-memo", memo.id));
                 if (!docSnap.exists()) continue;
                 const data = docSnap.data();
                 let previewText = "🔒";
@@ -484,7 +485,7 @@
     // 메모 삭제
     window.confirmDelete = async function(memoId, idx) {
         try {
-            await deleteDoc(doc(db, "memos", memoId));
+            await deleteDoc(doc(db, "ghost-memo", memoId));
             let myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
             myMemos = myMemos.filter(m => m.id !== memoId);
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
@@ -504,7 +505,7 @@
         document.getElementById('view-mode').classList.remove('hidden');
 
         try {
-            const docSnap = await getDoc(doc(db, "memos", memoId));
+            const docSnap = await getDoc(doc(db, "ghost-memo", memoId));
             document.getElementById('view-loading').classList.add('hidden');
 
             if (!docSnap.exists()) {
@@ -521,7 +522,7 @@
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
                 document.getElementById('view-ghost').classList.add('ghost-vanish');
-                await deleteDoc(doc(db, "memos", memoId));
+                await deleteDoc(doc(db, "ghost-memo", memoId));
                 return;
             }
 
@@ -588,7 +589,7 @@
         const password = document.getElementById('readPassword').value;
         const memoId = new URLSearchParams(window.location.search).get('id');
         try {
-            const docSnap = await getDoc(doc(db, "memos", memoId));
+            const docSnap = await getDoc(doc(db, "ghost-memo", memoId));
             if (docSnap.exists()) unlockWithData(docSnap.data(), password, false);
             else alert("링크 오류 💀");
         } catch (e) { alert("링크 오류 💀"); }
