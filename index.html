@@ -109,7 +109,7 @@
 
         /* 관리창 목록 */
         .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
-        .memo-item-wrap { display: flex; flex-direction: column; gap: 0; }
+        .memo-item-wrap { display: flex; flex-direction: column; }
 
         .memo-item-btn {
             background-color: transparent;
@@ -135,7 +135,7 @@
             white-space: nowrap;
         }
 
-        .memo-item-body { display: none; margin-top: 8px; margin-bottom: 0; }
+        .memo-item-body { display: none; margin-top: 8px; }
         .memo-item-body.open { display: block; }
 
         /* 관리창 포스트잇 */
@@ -144,12 +144,12 @@
         .memo-item-time { font-size: 11px; color: #888888; padding: 10px 16px 0 16px; }
         .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 6px 30px 20px 16px; }
 
-        /* 링크 스타일 - 다크모드 대응 */
+        /* 링크 색상 (다크모드 대응) */
         .memo-item-content a, .post-it-view a { color: #555555; text-decoration: underline; word-break: break-all; font-weight: normal; }
         body.dark-mode .memo-item-content a, body.dark-mode .post-it-view a { color: #aaaaaa; }
 
         /* 관리창 액션 버튼 */
-        .memo-item-actions { display: flex; gap: 8px; margin-bottom: 0; }
+        .memo-item-actions { display: flex; gap: 8px; }
         .memo-item-actions button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; box-sizing: border-box; }
         .btn-delete { background-color: var(--btn-bg); color: var(--btn-text); }
         .btn-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color) !important; }
@@ -232,7 +232,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyC0CigDd4zHuJiihvvznNFtF0Sm7hnyK28",
@@ -291,12 +291,10 @@
         btn.disabled = true;
 
         const now = new Date().getTime();
-        let expiryTimestamp = "forever";
-        if (expiry !== "forever") {
-            expiryTimestamp = now + (parseInt(expiry) * 60 * 60 * 1000);
-        } else {
-            expiryTimestamp = now + (180 * 24 * 60 * 60 * 1000);
-        }
+        // Ghost never dies = 6개월 후 소멸
+        const expiryTimestamp = expiry === "forever"
+            ? now + (180 * 24 * 60 * 60 * 1000)
+            : now + (parseInt(expiry) * 60 * 60 * 1000);
 
         const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
         const memoId = generateId();
@@ -306,8 +304,7 @@
                 content: encryptedText,
                 exp: expiryTimestamp,
                 hint: hint,
-                createdAt: Timestamp.now(),
-                autoDeleteAt: Timestamp.fromMillis(Date.now() + (180 * 24 * 60 * 60 * 1000))
+                createdAt: now
             });
 
             // 내 메모 목록 저장 (관리창용, 암호 포함)
@@ -414,7 +411,7 @@
         let validMemos = [];
 
         for (let memo of myMemos) {
-            if (memo.exp !== "forever" && now > memo.exp) continue;
+            if (now > memo.exp) continue;
             try {
                 const docSnap = await getDoc(doc(db, "ghost-memo", memo.id));
                 if (!docSnap.exists()) continue;
@@ -469,7 +466,7 @@
             `;
             listEl.appendChild(item);
 
-            // XSS 방지: 내용은 linkify 후 innerHTML로
+            // 내용은 XSS 방지를 위해 linkify 후 innerHTML로 설정
             const contentEl = document.getElementById(`memo-content-${idx}`);
             try {
                 const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
@@ -479,7 +476,7 @@
         });
     };
 
-    // 목록 아이템 토글
+    // 목록 아이템 토글/삭제 확인
     window.toggleMemoItem = function(idx) { document.getElementById(`memo-body-${idx}`).classList.toggle('open'); };
     window.showDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.add('open'); };
     window.hideDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.remove('open'); };
@@ -520,7 +517,7 @@
             const data = docSnap.data();
 
             // 만료 확인
-            if (data.exp !== "forever" && new Date().getTime() > data.exp) {
+            if (new Date().getTime() > data.exp) {
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
                 document.getElementById('view-ghost').classList.add('ghost-vanish');
@@ -548,7 +545,6 @@
             }
 
         } catch (e) {
-            // Firebase 오류 시 안내 표시
             document.getElementById('view-loading').classList.add('hidden');
             document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
             document.getElementById('expired-section').classList.remove('hidden');
