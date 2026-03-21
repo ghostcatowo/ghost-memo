@@ -293,9 +293,9 @@
         btn.disabled = true;
 
         const now = new Date().getTime();
-        // Ghost never dies = 6개월 후 소멸
+        // Ghost never dies = 영구 보존
         const expiryTimestamp = expiry === "forever"
-            ? now + (180 * 24 * 60 * 60 * 1000)
+            ? "forever"
             : now + (parseInt(expiry) * 60 * 60 * 1000);
 
         const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
@@ -417,7 +417,7 @@
         let validMemos = [];
 
         for (let memo of myMemos) {
-            if (now > memo.exp) continue;
+            if (memo.exp !== "forever" && now > memo.exp) continue;
             try {
                 const docSnap = await getDoc(doc(db, "ghost-memo", memo.id));
                 if (!docSnap.exists()) continue;
@@ -523,7 +523,7 @@
             const data = docSnap.data();
 
             // 만료 확인
-            if (new Date().getTime() > data.exp) {
+            if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
                 document.getElementById('view-ghost').classList.add('ghost-vanish');
