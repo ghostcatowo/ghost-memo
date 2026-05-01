@@ -167,9 +167,9 @@
 <body>
 
 <div class="top-btns">
-    <button class="manage-btn" onclick="showManage()">🐈‍⬛</button>
-    <button class="clear-cache-btn" onclick="clearSavedPasswords()">🗑️</button>
     <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <button class="clear-cache-btn" onclick="clearSavedPasswords()">🔐</button>
+    <button class="manage-btn" onclick="showManage()">🐈</button>
 </div>
 
 <!-- 작성 화면 -->
@@ -257,6 +257,8 @@
     // 저장된 암호 전체 삭제
     window.clearSavedPasswords = function() {
         localStorage.removeItem('ghost_saved_passwords');
+        localStorage.removeItem('ghost_last_password');
+        localStorage.removeItem('ghost_last_hint');
         alert("저장 암호 삭제 완료 💀");
     };
 
@@ -291,9 +293,9 @@
         btn.disabled = true;
 
         const now = new Date().getTime();
-        // Ghost never dies = 6개월 후 소멸
+        // Ghost never dies = 영구 보존
         const expiryTimestamp = expiry === "forever"
-            ? now + (180 * 24 * 60 * 60 * 1000)
+            ? "forever"
             : now + (parseInt(expiry) * 60 * 60 * 1000);
 
         const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
@@ -312,6 +314,10 @@
             myMemos.push({ id: memoId, password: password, exp: expiryTimestamp, createdAt: now });
             if (myMemos.length > 20) myMemos.shift();
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
+
+            // 마지막 암호/힌트 저장 (다음 작성 시 자동입력용)
+            localStorage.setItem('ghost_last_password', password);
+            localStorage.setItem('ghost_last_hint', hint);
 
             const shareLink = window.location.origin + window.location.pathname + "?id=" + memoId;
             btn.innerText = "링크 생성 완료 💀";
@@ -368,8 +374,8 @@
     // 새 메모 작성 초기화
     window.resetCreate = function() {
         document.getElementById('memoText').value = '';
-        document.getElementById('memoPassword').value = '';
-        document.getElementById('memoHint').value = '';
+        document.getElementById('memoPassword').value = localStorage.getItem('ghost_last_password') || '';
+        document.getElementById('memoHint').value = localStorage.getItem('ghost_last_hint') || '';
         document.getElementById('expiryTime').value = 'forever';
         document.getElementById('generateBtn').innerText = "링크 생성";
         document.getElementById('generateBtn').disabled = false;
@@ -383,8 +389,8 @@
         document.getElementById('manage-mode').classList.add('hidden');
         document.getElementById('create-mode').classList.remove('hidden');
         document.getElementById('memoText').value = '';
-        document.getElementById('memoPassword').value = '';
-        document.getElementById('memoHint').value = '';
+        document.getElementById('memoPassword').value = localStorage.getItem('ghost_last_password') || '';
+        document.getElementById('memoHint').value = localStorage.getItem('ghost_last_hint') || '';
         document.getElementById('expiryTime').value = 'forever';
         document.getElementById('generateBtn').innerText = "링크 생성";
         document.getElementById('generateBtn').disabled = false;
@@ -411,7 +417,7 @@
         let validMemos = [];
 
         for (let memo of myMemos) {
-            if (now > memo.exp) continue;
+            if (memo.exp !== "forever" && now > memo.exp) continue;
             try {
                 const docSnap = await getDoc(doc(db, "ghost-memo", memo.id));
                 if (!docSnap.exists()) continue;
@@ -517,7 +523,7 @@
             const data = docSnap.data();
 
             // 만료 확인
-            if (new Date().getTime() > data.exp) {
+            if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
                 document.getElementById('view-ghost').classList.add('ghost-vanish');
@@ -601,8 +607,16 @@
             document.getElementById('themeBtn').innerText = '☀️';
         }
         const memoId = new URLSearchParams(window.location.search).get('id');
-        if (memoId) loadMemo();
-        else document.getElementById('create-mode').classList.remove('hidden');
+        if (memoId) {
+            loadMemo();
+        } else {
+            document.getElementById('create-mode').classList.remove('hidden');
+            // 마지막 암호/힌트 자동입력
+            const lastPassword = localStorage.getItem('ghost_last_password');
+            const lastHint = localStorage.getItem('ghost_last_hint');
+            if (lastPassword) document.getElementById('memoPassword').value = lastPassword;
+            if (lastHint) document.getElementById('memoHint').value = lastHint;
+        }
     };
 
 </script>
