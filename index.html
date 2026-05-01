@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -546,19 +547,11 @@ document.getElementById('view-ghost').classList.add('ghost-vanish');
 }
 } 
 
-// 복호화 시도 (엄격한 유효성 검사 포함)
+// 복호화 시도
 function tryDecrypt(encryptedContent, password) {
 try {
 const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
-const result = bytes.toString(CryptoJS.enc.Utf8);
-if (!result || result.length === 0) return false;
-// 출력 가능한 정상 텍스트인지 검증: 제어문자(탭·줄바꿈 제외) 및 대체문자(U+FFFD) 포함 시 실패 처리
-const invalidChars = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\uFFFD]/;
-if (invalidChars.test(result)) return false;
-// 전체 문자 중 비정상 유니코드 비율이 20% 초과 시 실패 처리
-const nonPrintable = result.split('').filter(c => c.charCodeAt(0) > 0xFFFD).length;
-if (nonPrintable / result.length > 0.2) return false;
-return true;
+return !!bytes.toString(CryptoJS.enc.Utf8);
 } catch { return false; }
 } 
 
