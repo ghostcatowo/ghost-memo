@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유령 메모</title>
+    <!-- 강력한 암호화를 위해 CryptoJS 라이브러리를 불러옵니다 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        /* ☀️ 라이트 모드 (기본) */
+        :root {
+            --bg-color: #f4f4f9;
+            --container-bg: #ffffff;
+            --text-color: #222222;
+            --border-color: #dddddd;
+            --btn-bg: #222222;
+            --btn-text: #ffffff;
+            --btn-hover: #444444;
+            --subtitle-color: #666666;
+        }
+
+        /* 🌙 다크 모드 */
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #ffffff;
+            --border-color: #444444;
+            --btn-bg: #ffffff;
+            --btn-text: #000000;
+            --btn-hover: #cccccc;
+            --subtitle-color: #888888;
+        }
+
+        /* 💡 수정 완료! 화면 밖으로 밀려나지 않도록 min-height와 padding을 적용했어요! */
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 40px 20px; box-sizing: border-box; margin: 0; transition: background-color 0.4s, color 0.4s; }
+
+        .theme-toggle-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: var(--text-color); border: none; font-size: 24px; cursor: pointer; transition: transform 0.3s; }
+        .theme-toggle-btn:hover { transform: scale(1.2); }
+
+        .container { background: var(--container-bg); padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; max-width: 100%; text-align: center; border: 1px solid var(--border-color); transition: background-color 0.4s, border-color 0.4s, box-shadow 0.4s; }
+
+        body.dark-mode .container { box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+
+        h2 { color: var(--text-color); margin-bottom: 25px; font-weight: bold; letter-spacing: 2px; }
+        .subtitle { color: var(--subtitle-color); font-size: 13px; margin-bottom: 25px; }
+
+        .post-it-wrapper { position: relative; background: linear-gradient(-45deg, transparent 20px, #e9e9e9 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); margin: 10px 0; border-radius: 2px; text-align: left; }
+        .post-it-wrapper::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #cccccc 50%); box-shadow: -2px -2px 5px rgba(0,0,0,0.1); border-bottom-left-radius: 2px; }
+
+        .post-it-input { width: 100%; height: 160px; background: transparent; border: none; resize: none; padding: 18px; box-sizing: border-box; color: #222222; font-family: inherit; font-size: 14px; }
+        .post-it-input:focus { outline: none; }
+        .post-it-input::placeholder { color: #888888; font-weight: bold; }
+
+        .post-it-view { min-height: 120px; white-space: pre-wrap; line-height: 1.6; padding: 18px 25px 25px 18px; box-sizing: border-box; color: #222222; font-size: 14px; }
+
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-size: 14px; transition: 0.3s; }
+        input::placeholder { color: var(--subtitle-color); }
+        input:focus, select:focus { outline: none; border-color: var(--text-color); }
+        select option { background-color: var(--container-bg); color: var(--text-color); }
+
+        button.action-btn { background-color: var(--btn-bg); color: var(--btn-text); border: none; padding: 14px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 15px; transition: 0.3s; }
+        button.action-btn:hover { background-color: var(--btn-hover); }
+
+        .hidden { display: none; }
+
+        /* 💡 수정 완료! 링크 박스 높이를 고정하고 넘치면 스크롤이 생기게 했어요! */
+        #linkBox { background: transparent; color: var(--text-color); padding: 15px; border-radius: 6px; word-break: break-all; font-size: 12px; border: 1px solid var(--border-color); margin-top: 20px; max-height: 70px; overflow-y: auto; text-align: left;}
+
+        /* 스크롤바 예쁘게 깎기 */
+        #linkBox::-webkit-scrollbar { width: 6px; }
+        #linkBox::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 10px; }
+
+        #hint-display { font-size: 14px; color: var(--text-color); background: var(--border-color); padding: 10px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
+
+        @keyframes wavy-floating {
+            0% { transform: translate(0px, 0px) rotate(0deg); }
+            25% { transform: translate(-3px, -10px) rotate(-3deg); }
+            50% { transform: translate(0px, -18px) rotate(0deg); }
+            75% { transform: translate(3px, -10px) rotate(3deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
+        }
+
+        @keyframes vanish-loop {
+            0% { opacity: 1; filter: blur(0px); transform: scale(1); }
+            50% { opacity: 0.1; filter: blur(8px); transform: scale(1.1); }
+            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
+        }
+
+        .ghost-icon { font-size: 45px; margin-bottom: 5px; display: inline-block; animation: wavy-floating 3.5s ease-in-out infinite; }
+        .ghost-vanish { animation: vanish-loop 4s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+<button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+
+<div class="container" id="create-mode">
+    <div class="ghost-icon">👻</div>
+    <h2>유령 메모</h2>
+
+    <div class="post-it-wrapper">
+        <textarea id="memoText" class="post-it-input" placeholder="🔒 비밀 댓글 입니다"></textarea>
+    </div>
+
+    <input type="password" id="memoPassword" placeholder="암호 설정 (필수)">
+    <input type="text" id="memoHint" placeholder="암호 힌트 (선택)">
+
+    <select id="expiryTime">
+        <option value="forever" selected>유령이 세상을 먹는다!</option>
+        <option value="1">1시간 후 소멸</option>
+        <option value="5">5시간 후 소멸</option>
+        <option value="24">1일 후 소멸</option>
+    </select>
+
+    <button class="action-btn" id="generateBtn" onclick="generateLink()">링크 생성</button>
+
+    <div id="linkContainer" class="hidden">
+        <!-- 이제 높이가 제한되어서 유령이 안 밀려나요! -->
+        <div id="linkBox"></div>
+    </div>
+</div>
+
+<div class="container hidden" id="view-mode">
+    <div class="ghost-icon">👻</div>
+    <h2>유령이 나타났습니다.</h2>
+
+    <div id="password-section">
+        <div id="hint-display" class="hidden"></div>
+        <input type="password" id="readPassword" placeholder="암호 입력">
+        <button class="action-btn" onclick="unlockMemo()">열람하기</button>
+    </div>
+
+    <div id="content-section" class="hidden">
+        <div class="post-it-wrapper">
+            <div class="post-it-view" id="decryptedText"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        document.getElementById('themeBtn').innerText = isDark ? '☀️' : '🌙';
+        localStorage.setItem('ghost_memo_theme', isDark ? 'dark' : 'light');
+    }
+
+    window.onload = function() {
+        const savedTheme = localStorage.getItem('ghost_memo_theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeBtn').innerText = '☀️';
+        } else {
+            document.body.classList.remove('dark-mode');
+            document.getElementById('themeBtn').innerText = '🌙';
+        }
+
+        if (window.location.hash) {
+            document.getElementById('create-mode').classList.add('hidden');
+            document.getElementById('view-mode').classList.remove('hidden');
+            checkAutoPass();
+        }
+    };
+
+    function generateLink() {
+        const text = document.getElementById('memoText').value;
+        const password = document.getElementById('memoPassword').value;
+        const hint = document.getElementById('memoHint').value;
+        const expiry = document.getElementById('expiryTime').value;
+
+        if (!text || !password) {
+            alert("메모와 암호를 모두 입력하세요.");
+            return;
+        }
+
+        const now = new Date().getTime();
+        let expiryTimestamp = "forever";
+        if (expiry !== "forever") {
+            expiryTimestamp = now + (parseInt(expiry) * 60 * 60 * 1000);
+        }
+
+        const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
+
+        const dataPayload = {
+            content: encryptedText,
+            exp: expiryTimestamp,
+            hint: hint
+        };
+
+        const base64Data = btoa(encodeURIComponent(JSON.stringify(dataPayload)));
+        const shareLink = window.location.origin + window.location.pathname + "#" + base64Data;
+
+        document.getElementById('generateBtn').innerText = "링크 생성 완료 💀";
+
+        document.getElementById('linkContainer').classList.remove('hidden');
+        document.getElementById('linkBox').innerText = shareLink;
+    }
+
+    function tryUnlockSilent(hashData, testPassword) {
+        try {
+            const decodedStr = decodeURIComponent(atob(hashData));
+            const dataObj = JSON.parse(decodedStr);
+            const bytes = CryptoJS.AES.decrypt(dataObj.content, testPassword);
+            const originalText = bytes.toString(CryptoJS.enc.Utf8);
+            return !!originalText;
+        } catch {
+            return false;
+        }
+    }
+
+    function checkAutoPass() {
+        const hashData = window.location.hash.substring(1);
+
+        try {
+            const dataObj = JSON.parse(decodeURIComponent(atob(hashData)));
+            if (dataObj.hint) {
+                const hintDiv = document.getElementById('hint-display');
+                hintDiv.innerText = "💡 힌트: " + dataObj.hint;
+                hintDiv.classList.remove('hidden');
+            }
+        } catch(e) {}
+
+        const savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
+
+        let autoUnlocked = false;
+        for (let savedPass of savedPasswords) {
+            if (tryUnlockSilent(hashData, savedPass)) {
+                document.getElementById('readPassword').value = savedPass;
+                autoUnlocked = true;
+                unlockMemo(true);
+                break;
+            }
+        }
+    }
+
+    function unlockMemo(isAuto = false) {
+        const password = document.getElementById('readPassword').value;
+        const hashData = window.location.hash.substring(1);
+
+        try {
+            const decodedStr = decodeURIComponent(atob(hashData));
+            const dataObj = JSON.parse(decodedStr);
+
+            if (dataObj.exp !== "forever" && new Date().getTime() > dataObj.exp) {
+                document.getElementById('view-mode').innerHTML = "<div class='ghost-icon ghost-vanish'>👻</div><h2>유령이 사라졌습니다.</h2>";
+                return;
+            }
+
+            const bytes = CryptoJS.AES.decrypt(dataObj.content, password);
+            const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+            if (!originalText) throw new Error("Wrong Password");
+
+            let savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
+            if (!savedPasswords.includes(password)) {
+                savedPasswords.push(password);
+                if (savedPasswords.length > 5) savedPasswords.shift();
+                localStorage.setItem('ghost_saved_passwords', JSON.stringify(savedPasswords));
+            }
+
+            document.querySelector('#view-mode h2').innerText = "메시지 암호가 해독되었습니다.";
+            document.getElementById('password-section').classList.add('hidden');
+            document.getElementById('content-section').classList.remove('hidden');
+            document.getElementById('decryptedText').innerText = originalText;
+
+        } catch (e) {
+            if (!isAuto) alert("암호가 틀렸거나 사라진 유령입니다.");
+        }
+    }
+</script>
+
+</body>
+</html>
