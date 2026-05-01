@@ -293,7 +293,6 @@
         btn.disabled = true;
 
         const now = new Date().getTime();
-        // Ghost never dies = 영구 보존
         const expiryTimestamp = expiry === "forever"
             ? "forever"
             : now + (parseInt(expiry) * 60 * 60 * 1000);
@@ -309,13 +308,11 @@
                 createdAt: now
             });
 
-            // 내 메모 목록 저장 (관리창용, 암호 포함)
             const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
             myMemos.push({ id: memoId, password: password, exp: expiryTimestamp, createdAt: now });
             if (myMemos.length > 20) myMemos.shift();
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
 
-            // 마지막 암호/힌트 저장 (다음 작성 시 자동입력용)
             localStorage.setItem('ghost_last_password', password);
             localStorage.setItem('ghost_last_hint', hint);
 
@@ -333,7 +330,6 @@
         }
     };
 
-    // 클립보드 복사 (iOS 폴백 포함)
     function copyText(text, successEl, failMsg) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
@@ -361,17 +357,14 @@
         } catch { alert(failMsg); }
     }
 
-    // 링크 복사
     window.copyToClipboard = function() {
         copyText(document.getElementById('linkBox').innerText, document.getElementById('copyBtn'), "링크 복사 실패 💀");
     };
 
-    // 메모 복사
     window.copyMemoText = function() {
         copyText(document.getElementById('decryptedText').innerText, document.getElementById('memoCopyBtn'), "메모 복사 실패 💀");
     };
 
-    // 새 메모 작성 초기화
     window.resetCreate = function() {
         document.getElementById('memoText').value = '';
         document.getElementById('memoPassword').value = localStorage.getItem('ghost_last_password') || '';
@@ -382,7 +375,6 @@
         document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 작성 화면으로 이동 + 폼 초기화
     window.goToCreate = function() {
         history.pushState('', document.title, window.location.pathname);
         document.getElementById('view-mode').classList.add('hidden');
@@ -397,7 +389,6 @@
         document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 관리 화면 표시
     window.showManage = async function() {
         document.getElementById('create-mode').classList.add('hidden');
         document.getElementById('view-mode').classList.add('hidden');
@@ -434,7 +425,6 @@
 
         loadingEl.classList.add('hidden');
 
-        // 만료/삭제된 메모 localStorage 정리
         const validIds = validMemos.map(m => m.id);
         localStorage.setItem('ghost_my_memos', JSON.stringify(
             myMemos.filter(m => validIds.includes(m.id))
@@ -472,7 +462,6 @@
             `;
             listEl.appendChild(item);
 
-            // 내용은 XSS 방지를 위해 linkify 후 innerHTML로 설정
             const contentEl = document.getElementById(`memo-content-${idx}`);
             try {
                 const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
@@ -482,12 +471,10 @@
         });
     };
 
-    // 목록 아이템 토글/삭제 확인
     window.toggleMemoItem = function(idx) { document.getElementById(`memo-body-${idx}`).classList.toggle('open'); };
     window.showDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.add('open'); };
     window.hideDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.remove('open'); };
 
-    // 메모 삭제
     window.confirmDelete = async function(memoId, idx) {
         try {
             await deleteDoc(doc(db, "ghost-memo", memoId));
@@ -501,7 +488,6 @@
         } catch (e) { alert("소환 해제 실패 💀"); }
     };
 
-    // 열람 화면 로드
     async function loadMemo() {
         const memoId = new URLSearchParams(window.location.search).get('id');
         if (!memoId) return;
@@ -522,7 +508,6 @@
 
             const data = docSnap.data();
 
-            // 만료 확인
             if (data.exp !== "forever" && new Date().getTime() > data.exp) {
                 document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
                 document.getElementById('expired-section').classList.remove('hidden');
@@ -531,7 +516,6 @@
                 return;
             }
 
-            // 힌트 표시
             if (data.hint) {
                 const hintDiv = document.getElementById('hint-display');
                 hintDiv.innerText = "💀 힌트: " + data.hint;
@@ -558,22 +542,23 @@
         }
     }
 
-    // 복호화 시도
+    // ✅ 버그 수정: 깨진 복호화 결과를 성공으로 오판하지 않도록 제어문자 검증 추가
     function tryDecrypt(encryptedContent, password) {
         try {
             const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
-            return !!bytes.toString(CryptoJS.enc.Utf8);
+            const text = bytes.toString(CryptoJS.enc.Utf8);
+            if (!text || text.length === 0) return false;
+            if (/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(text)) return false;
+            return true;
         } catch { return false; }
     }
 
-    // 암호로 메모 열기
     function unlockWithData(data, password, isAuto = false) {
         try {
             const bytes = CryptoJS.AES.decrypt(data.content, password);
             const originalText = bytes.toString(CryptoJS.enc.Utf8);
             if (!originalText) throw new Error();
 
-            // 열람 암호 캐싱 (자동입력용)
             let savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
             if (!savedPasswords.includes(password)) {
                 savedPasswords.push(password);
@@ -588,7 +573,6 @@
         } catch (e) { if (!isAuto) alert("암호 오류 💀"); }
     }
 
-    // 유령 만나기 버튼
     window.unlockMemo = async function() {
         const password = document.getElementById('readPassword').value;
         const memoId = new URLSearchParams(window.location.search).get('id');
@@ -599,7 +583,6 @@
         } catch (e) { alert("링크 오류 💀"); }
     };
 
-    // 초기 로드
     window.onload = function() {
         const savedTheme = localStorage.getItem('ghost_memo_theme');
         if (savedTheme === 'dark') {
@@ -611,7 +594,6 @@
             loadMemo();
         } else {
             document.getElementById('create-mode').classList.remove('hidden');
-            // 마지막 암호/힌트 자동입력
             const lastPassword = localStorage.getItem('ghost_last_password');
             const lastHint = localStorage.getItem('ghost_last_hint');
             if (lastPassword) document.getElementById('memoPassword').value = lastPassword;
