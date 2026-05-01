@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -273,7 +274,7 @@ const div = document.createElement('div');
 div.innerText = text;
 let safeText = div.innerHTML;
 const urlPattern = /(\b(https?)://[-A-Z0-9+&@#/%?=~|!:,.;]*[-A-Z0-9+&@#/%=~|])/ig;
-return safeText.replace(urlPattern, '<a href="1</a>');
+return safeText.replace(urlPattern, '<a href=" 1</a>');
 }
 
 // 링크 생성 및 Firebase 저장
@@ -440,15 +441,15 @@ const item = document.createElement('div');
 item.className = 'memo-item-wrap';
 item.innerHTML = &lt;button class="memo-item-btn" onclick="toggleMemoItem(${idx})">
 <span style="font-size:16px;">👻</span>
-<span class="memo-item-text">{idx}">
+<span class="memo-item-text"> {idx}">
 <div class="memo-item-postit">
-<div class="memo-item-time">{idx}"></div>
+<div class="memo-item-time"> {idx}"></div>
 </div>
 <div class="memo-item-actions">
-<button class="btn-delete" onclick="showDeleteConfirm({idx}">
+<button class="btn-delete" onclick="showDeleteConfirm( {idx}">
 <p>유령을 소환 해제하겠습니까?</p>
 <div class="delete-confirm-btns">
-<button class="btn-cancel" onclick="hideDeleteConfirm({memo.id}', ${idx})"&gt;확인&lt;/button&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;;
+<button class="btn-cancel" onclick="hideDeleteConfirm( {memo.id}', ${idx})"&gt;확인&lt;/button&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt;;
 listEl.appendChild(item);
 
 const contentEl = document.getElementById(memo-content-${idx}`);
@@ -536,14 +537,7 @@ try {
 const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
 const text = bytes.toString(CryptoJS.enc.Utf8);
 if (!text || text.length === 0) return false;
-// 제어문자 포함 시 실패
-if (/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(text)) return false;
-// 전체 글자 중 일반적으로 쓰이지 않는 유니코드 비율이 30% 넘으면 실패
-const suspicious = text.split('').filter(c => {
-const code = c.charCodeAt(0);
-return code > 0x02AF && code < 0x0370; // 라틴 확장 범위 이상의 비일반 문자
-}).length;
-if (text.length > 0 && suspicious / text.length > 0.3) return false;
+if (/[\x00-\x08\x0B\x0C\x0E-\x1F]/.test(text)) return false;
 return true;
 } catch { return false; }
 }
