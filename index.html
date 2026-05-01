@@ -78,7 +78,7 @@
         /* 로딩 */
         .loading-text { font-size: 14px; color: var(--subtitle-color); margin-top: 15px; }
 
-        /* 유령 애니메이션 */
+        /* 유령 둥실 */
         @keyframes wavy-floating {
             0% { transform: translate(0px, 0px) rotate(0deg); }
             25% { transform: translate(-3px, -10px) rotate(-3deg); }
@@ -86,14 +86,18 @@
             75% { transform: translate(3px, -10px) rotate(3deg); }
             100% { transform: translate(0px, 0px) rotate(0deg); }
         }
+
+        /* 유령 소멸 */
         @keyframes vanish-loop {
             0% { opacity: 1; filter: blur(0px); transform: scale(1); }
             50% { opacity: 0.1; filter: blur(8px); transform: scale(1.1); }
             100% { opacity: 1; filter: blur(0px); transform: scale(1); }
         }
+
         .ghost-icon { font-size: 45px; margin-bottom: 5px; display: inline-block; animation: wavy-floating 3.5s ease-in-out infinite; }
         .ghost-vanish { animation: vanish-loop 4s ease-in-out infinite; }
 
+        /* 타이틀 번짐 */
         @keyframes ghost-blur {
             0%   { filter: blur(0px); opacity: 1; }
             30%  { filter: blur(3px); opacity: 0.6; }
@@ -103,33 +107,59 @@
         .ghost-title-wrap { display: flex; align-items: center; gap: 12px; justify-content: center; }
         .ghost-title-wrap::before, .ghost-title-wrap::after { content: ''; flex: 1; height: 1px; background: var(--text-color); opacity: 0.25; }
 
-        /* 목록 */
+        /* 관리창 목록 */
         .memo-list { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
         .memo-item-wrap { display: flex; flex-direction: column; }
-        .memo-item-btn { background-color: transparent; color: var(--text-color); border: none; padding: 14px 4px; width: 100%; cursor: pointer; font-weight: 500; font-size: 15px; text-align: left; display: flex; align-items: center; gap: 10px; }
-        .memo-item-text { border-bottom: 1px dashed var(--subtitle-color); padding-bottom: 2px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .memo-item-btn {
+            background-color: transparent;
+            color: var(--text-color);
+            border: none;
+            padding: 14px 4px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 15px;
+            text-align: left;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .memo-item-text {
+            border-bottom: 1px dashed var(--subtitle-color);
+            padding-bottom: 2px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .memo-item-body { display: none; margin-top: 8px; }
         .memo-item-body.open { display: block; }
 
-        /* 목록 포스트잇 */
+        /* 관리창 포스트잇 */
         .memo-item-postit { position: relative; background: linear-gradient(-45deg, transparent 20px, #f5f5f5 0); box-shadow: 3px 4px 10px rgba(0,0,0,0.15); border-radius: 2px; text-align: left; margin-bottom: 8px; overflow: hidden; border: 1px solid #dddddd; }
         .memo-item-postit::after { content: ''; position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: linear-gradient(135deg, transparent 50%, #dddddd 50%); border-bottom-left-radius: 2px; }
         .memo-item-time { font-size: 11px; color: #888888; padding: 10px 16px 0 16px; }
         .memo-item-content { font-size: 13px; color: #222222; white-space: pre-wrap; word-break: break-all; line-height: 1.6; padding: 6px 30px 20px 16px; }
 
-        .memo-item-content a, .post-it-view a { color: #555555; text-decoration: underline; }
+        /* 링크 색상 (다크모드 대응) */
+        .memo-item-content a, .post-it-view a { color: #555555; text-decoration: underline; word-break: break-all; font-weight: normal; }
         body.dark-mode .memo-item-content a, body.dark-mode .post-it-view a { color: #aaaaaa; }
 
+        /* 관리창 액션 버튼 */
         .memo-item-actions { display: flex; gap: 8px; }
-        .memo-item-actions button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; }
+        .memo-item-actions button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; box-sizing: border-box; }
         .btn-delete { background-color: var(--btn-bg); color: var(--btn-text); }
         .btn-cancel { background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color) !important; }
 
+        /* 삭제 확인 */
         .delete-confirm { display: none; margin-top: 8px; text-align: center; }
         .delete-confirm.open { display: block; }
         .delete-confirm p { font-size: 13px; color: var(--subtitle-color); margin-bottom: 8px; }
         .delete-confirm-btns { display: flex; gap: 8px; }
-        .delete-confirm-btns button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; }
+        .delete-confirm-btns button { flex: 1; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; border: 1px solid transparent; box-sizing: border-box; }
 
         .empty-msg { color: var(--subtitle-color); font-size: 14px; margin-top: 20px; }
     </style>
@@ -201,7 +231,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-    // Firebase 설정
     const firebaseConfig = {
         apiKey: "AIzaSyC0CigDd4zHuJiihvvznNFtF0Sm7hnyK28",
         authDomain: "ghost-memo-ce80f.firebaseapp.com",
@@ -214,7 +243,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 테마 설정
+    // 테마 토글
     window.toggleTheme = function() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
@@ -222,7 +251,7 @@
         localStorage.setItem('ghost_memo_theme', isDark ? 'dark' : 'light');
     };
 
-    // 암호 초기화
+    // 저장된 암호 전체 삭제
     window.clearSavedPasswords = function() {
         localStorage.removeItem('ghost_saved_passwords');
         localStorage.removeItem('ghost_last_password');
@@ -230,9 +259,12 @@
         alert("저장 암호 삭제 완료 💀");
     };
 
-    // 헬퍼 함수들
-    function generateId() { return Math.random().toString(36).substring(2, 10); }
-    
+    // 랜덤 ID 생성 (8자리)
+    function generateId() {
+        return Math.random().toString(36).substring(2, 10);
+    }
+
+    // URL 자동 링크 변환 (XSS 방지 포함)
     function linkify(text) {
         const div = document.createElement('div');
         div.innerText = text;
@@ -241,38 +273,28 @@
         return safeText.replace(urlPattern, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
     }
 
-    // ✅ 핵심 수정: 복호화 검증 로직 강화 (깨진 문자 방어)
-    function tryDecrypt(encryptedContent, password) {
-        try {
-            const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
-            const text = bytes.toString(CryptoJS.enc.Utf8);
-            
-            // 1. 결과가 비어있으면 실패
-            if (!text || text.length === 0) return false;
-            
-            // 2. 깨진 문자(제어 문자 및 유니코드 대체 문자)가 포함되어 있는지 검사
-            // \uFFFD는 잘못된 복호화 시 발생하는 대표적인 깨진 문자 기호입니다.
-            if (/[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFD]/.test(text)) return false;
-            
-            return true;
-        } catch { return false; }
-    }
-
-    // 메모 생성
+    // 링크 생성 및 Firebase 저장
     window.generateMemo = async function() {
         const text = document.getElementById('memoText').value;
         const password = document.getElementById('memoPassword').value;
         const hint = document.getElementById('memoHint').value;
         const expiry = document.getElementById('expiryTime').value;
 
-        if (!text || !password) { alert("메모 암호 확인 💀"); return; }
+        if (!text || !password) {
+            alert("메모 암호 확인 💀");
+            return;
+        }
 
         const btn = document.getElementById('generateBtn');
         btn.innerText = "유령 소환 중... 👻";
         btn.disabled = true;
 
         const now = new Date().getTime();
-        const expiryTimestamp = expiry === "forever" ? "forever" : now + (parseInt(expiry) * 60 * 60 * 1000);
+        // Ghost never dies = 영구 보존
+        const expiryTimestamp = expiry === "forever"
+            ? "forever"
+            : now + (parseInt(expiry) * 60 * 60 * 1000);
+
         const encryptedText = CryptoJS.AES.encrypt(text, password).toString();
         const memoId = generateId();
 
@@ -284,13 +306,13 @@
                 createdAt: now
             });
 
-            // 내 관리 목록 업데이트
+            // 내 메모 목록 저장 (관리창용, 암호 포함)
             const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
             myMemos.push({ id: memoId, password: password, exp: expiryTimestamp, createdAt: now });
             if (myMemos.length > 20) myMemos.shift();
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
 
-            // 작성 편의를 위해 마지막 암호 기억
+            // 마지막 암호/힌트 저장 (다음 작성 시 자동입력용)
             localStorage.setItem('ghost_last_password', password);
             localStorage.setItem('ghost_last_hint', hint);
 
@@ -301,53 +323,81 @@
             document.getElementById('linkBox').innerText = shareLink;
             document.getElementById('copyBtn').classList.remove('success');
 
-        } catch (e) { alert("링크 생성 실패 💀"); btn.innerText = "링크 생성"; btn.disabled = false; }
+        } catch (e) {
+            alert("링크 생성 실패 💀");
+            btn.innerText = "링크 생성";
+            btn.disabled = false;
+        }
     };
 
-    // 복사 기능
+    // 클립보드 복사 (iOS 폴백 포함)
     function copyText(text, successEl, failMsg) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
                 successEl.classList.add('success');
                 setTimeout(() => { successEl.classList.remove('success'); }, 600);
             }).catch(() => { fallbackCopy(text, successEl, failMsg); });
-        } else { fallbackCopy(text, successEl, failMsg); }
+        } else {
+            fallbackCopy(text, successEl, failMsg);
+        }
     }
 
     function fallbackCopy(text, successEl, failMsg) {
         try {
             const el = document.createElement('textarea');
             el.value = text;
-            el.style.position = 'fixed'; el.style.opacity = '0';
-            document.body.appendChild(el); el.focus(); el.select();
-            document.execCommand('copy'); document.body.removeChild(el);
+            el.style.position = 'fixed';
+            el.style.opacity = '0';
+            document.body.appendChild(el);
+            el.focus();
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
             successEl.classList.add('success');
             setTimeout(() => { successEl.classList.remove('success'); }, 600);
         } catch { alert(failMsg); }
     }
 
-    window.copyToClipboard = function() { copyText(document.getElementById('linkBox').innerText, document.getElementById('copyBtn'), "링크 복사 실패 💀"); };
-    window.copyMemoText = function() { copyText(document.getElementById('decryptedText').innerText, document.getElementById('memoCopyBtn'), "메모 복사 실패 💀"); };
+    // 링크 복사
+    window.copyToClipboard = function() {
+        copyText(document.getElementById('linkBox').innerText, document.getElementById('copyBtn'), "링크 복사 실패 💀");
+    };
 
-    // 화면 이동/초기화
+    // 메모 복사
+    window.copyMemoText = function() {
+        copyText(document.getElementById('decryptedText').innerText, document.getElementById('memoCopyBtn'), "메모 복사 실패 💀");
+    };
+
+    // 새 메모 작성 초기화
     window.resetCreate = function() {
         document.getElementById('memoText').value = '';
         document.getElementById('memoPassword').value = localStorage.getItem('ghost_last_password') || '';
         document.getElementById('memoHint').value = localStorage.getItem('ghost_last_hint') || '';
-        document.getElementById('linkContainer').classList.add('hidden');
+        document.getElementById('expiryTime').value = 'forever';
         document.getElementById('generateBtn').innerText = "링크 생성";
+        document.getElementById('generateBtn').disabled = false;
+        document.getElementById('linkContainer').classList.add('hidden');
     };
 
+    // 작성 화면으로 이동 + 폼 초기화
     window.goToCreate = function() {
         history.pushState('', document.title, window.location.pathname);
-        document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+        document.getElementById('view-mode').classList.add('hidden');
+        document.getElementById('manage-mode').classList.add('hidden');
         document.getElementById('create-mode').classList.remove('hidden');
-        resetCreate();
+        document.getElementById('memoText').value = '';
+        document.getElementById('memoPassword').value = localStorage.getItem('ghost_last_password') || '';
+        document.getElementById('memoHint').value = localStorage.getItem('ghost_last_hint') || '';
+        document.getElementById('expiryTime').value = 'forever';
+        document.getElementById('generateBtn').innerText = "링크 생성";
+        document.getElementById('generateBtn').disabled = false;
+        document.getElementById('linkContainer').classList.add('hidden');
     };
 
-    // 관리 화면
+    // 관리 화면 표시
     window.showManage = async function() {
-        document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+        document.getElementById('create-mode').classList.add('hidden');
+        document.getElementById('view-mode').classList.add('hidden');
         document.getElementById('manage-mode').classList.remove('hidden');
 
         const myMemos = JSON.parse(localStorage.getItem('ghost_my_memos') || "[]");
@@ -357,7 +407,6 @@
 
         listEl.innerHTML = '';
         if (myMemos.length === 0) { emptyEl.classList.remove('hidden'); return; }
-        
         emptyEl.classList.add('hidden');
         loadingEl.classList.remove('hidden');
 
@@ -371,23 +420,26 @@
                 if (!docSnap.exists()) continue;
                 const data = docSnap.data();
                 let previewText = "🔒";
-                try {
-                    const bytes = CryptoJS.AES.decrypt(data.content, memo.password);
-                    const text = bytes.toString(CryptoJS.enc.Utf8);
-                    if (text && !/[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFD]/.test(text)) {
-                        previewText = text.substring(0, 20) + (text.length > 20 ? "..." : "");
-                    }
-                } catch {}
+                const decrypted = tryDecryptText(data.content, memo.password);
+                if (decrypted) previewText = decrypted.substring(0, 20) + (decrypted.length > 20 ? "..." : "");
                 validMemos.push({ ...memo, previewText, data });
             } catch {}
         }
 
         loadingEl.classList.add('hidden');
+
+        // 만료/삭제된 메모 localStorage 정리
+        const validIds = validMemos.map(m => m.id);
+        localStorage.setItem('ghost_my_memos', JSON.stringify(
+            myMemos.filter(m => validIds.includes(m.id))
+        ));
+
         if (validMemos.length === 0) { emptyEl.classList.remove('hidden'); return; }
 
         validMemos.forEach((memo, idx) => {
             const d = new Date(memo.createdAt);
             const createdText = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+
             const item = document.createElement('div');
             item.className = 'memo-item-wrap';
             item.innerHTML = `
@@ -414,19 +466,19 @@
             `;
             listEl.appendChild(item);
 
+            // 내용은 XSS 방지를 위해 linkify 후 innerHTML로 설정
             const contentEl = document.getElementById(`memo-content-${idx}`);
-            try {
-                const bytes = CryptoJS.AES.decrypt(memo.data.content, memo.password);
-                const content = bytes.toString(CryptoJS.enc.Utf8);
-                contentEl.innerHTML = (content && !/[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFD]/.test(content)) ? linkify(content) : "복호화 실패 💀";
-            } catch { contentEl.innerText = "복호화 실패 💀"; }
+            const content = tryDecryptText(memo.data.content, memo.password);
+            contentEl.innerHTML = content ? linkify(content) : "복호화 실패 💀";
         });
     };
 
+    // 목록 아이템 토글/삭제 확인
     window.toggleMemoItem = function(idx) { document.getElementById(`memo-body-${idx}`).classList.toggle('open'); };
     window.showDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.add('open'); };
     window.hideDeleteConfirm = function(idx) { document.getElementById(`delete-confirm-${idx}`).classList.remove('open'); };
 
+    // 메모 삭제
     window.confirmDelete = async function(memoId, idx) {
         try {
             await deleteDoc(doc(db, "ghost-memo", memoId));
@@ -434,7 +486,9 @@
             myMemos = myMemos.filter(m => m.id !== memoId);
             localStorage.setItem('ghost_my_memos', JSON.stringify(myMemos));
             document.getElementById(`memo-body-${idx}`).closest('.memo-item-wrap').remove();
-            if (document.getElementById('memo-list').children.length === 0) emptyEl.classList.remove('hidden');
+            if (document.getElementById('memo-list').children.length === 0) {
+                document.getElementById('manage-empty').classList.remove('hidden');
+            }
         } catch (e) { alert("소환 해제 실패 💀"); }
     };
 
@@ -451,48 +505,72 @@
             document.getElementById('view-loading').classList.add('hidden');
 
             if (!docSnap.exists()) {
-                showExpired(); return;
+                document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
+                document.getElementById('expired-section').classList.remove('hidden');
+                document.getElementById('view-ghost').classList.add('ghost-vanish');
+                return;
             }
 
             const data = docSnap.data();
+
+            // 만료 확인
             if (data.exp !== "forever" && new Date().getTime() > data.exp) {
-                showExpired(); await deleteDoc(doc(db, "ghost-memo", memoId)); return;
+                document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
+                document.getElementById('expired-section').classList.remove('hidden');
+                document.getElementById('view-ghost').classList.add('ghost-vanish');
+                await deleteDoc(doc(db, "ghost-memo", memoId));
+                return;
             }
 
+            // 힌트 표시
             if (data.hint) {
                 const hintDiv = document.getElementById('hint-display');
-                hintDiv.innerText = "💀 힌트: " + data.hint; hintDiv.classList.remove('hidden');
+                hintDiv.innerText = "💀 힌트: " + data.hint;
+                hintDiv.classList.remove('hidden');
             }
 
             document.getElementById('password-section').classList.remove('hidden');
 
-            // 자동 해독 시도
+            // 저장된 암호로 자동 해독 시도
             const savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
             for (let savedPass of savedPasswords) {
-                if (tryDecrypt(data.content, savedPass)) {
+                const result = tryDecryptText(data.content, savedPass);
+                if (result) {
                     document.getElementById('readPassword').value = savedPass;
                     unlockWithData(data, savedPass, true);
                     break;
                 }
             }
-        } catch (e) { showExpired(); }
+
+        } catch (e) {
+            document.getElementById('view-loading').classList.add('hidden');
+            document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
+            document.getElementById('expired-section').classList.remove('hidden');
+            document.getElementById('view-ghost').classList.add('ghost-vanish');
+        }
     }
 
-    function showExpired() {
-        document.getElementById('view-loading').classList.add('hidden');
-        document.getElementById('view-title').innerText = "유령이 사라졌습니다.";
-        document.getElementById('expired-section').classList.remove('hidden');
-        document.getElementById('view-ghost').classList.add('ghost-vanish');
-    }
-
-    function unlockWithData(data, password, isAuto = false) {
+    // ✅ 버그 해결된 복호화 체크 함수
+    function tryDecryptText(encryptedContent, password) {
         try {
-            const bytes = CryptoJS.AES.decrypt(data.content, password);
-            const originalText = bytes.toString(CryptoJS.enc.Utf8);
-            
-            // ✅ 최종 복호화 단계에서도 깨짐 검사
-            if (!originalText || /[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFD]/.test(originalText)) throw new Error();
+            const bytes = CryptoJS.AES.decrypt(encryptedContent, password);
+            const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+            // 텍스트가 없거나 깨진 문자가 포함되면 틀린 비번으로 처리
+            if (!decryptedText || /[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFD]/.test(decryptedText)) return null;
+            return decryptedText;
+        } catch { return null; }
+    }
 
+    // ✅ 위에서 정의한 tryDecryptText를 활용하도록 명칭 수정
+    function tryDecrypt(encryptedContent, password) {
+        return !!tryDecryptText(encryptedContent, password);
+    }
+
+    // 암호로 메모 열기
+    function unlockWithData(data, password, isAuto = false) {
+        const originalText = tryDecryptText(data.content, password);
+        if (originalText) {
+            // 열람 암호 캐싱 (자동입력용)
             let savedPasswords = JSON.parse(localStorage.getItem('ghost_saved_passwords') || "[]");
             if (!savedPasswords.includes(password)) {
                 savedPasswords.push(password);
@@ -503,10 +581,12 @@
             document.getElementById('password-section').classList.add('hidden');
             document.getElementById('content-section').classList.remove('hidden');
             document.getElementById('decryptedText').innerHTML = linkify(originalText);
-
-        } catch (e) { if (!isAuto) alert("암호 오류 💀"); }
+        } else { 
+            if (!isAuto) alert("암호 오류 💀"); 
+        }
     }
 
+    // 유령 만나기 버튼
     window.unlockMemo = async function() {
         const password = document.getElementById('readPassword').value;
         const memoId = new URLSearchParams(window.location.search).get('id');
@@ -517,6 +597,7 @@
         } catch (e) { alert("링크 오류 💀"); }
     };
 
+    // 초기 로드
     window.onload = function() {
         const savedTheme = localStorage.getItem('ghost_memo_theme');
         if (savedTheme === 'dark') {
@@ -524,13 +605,18 @@
             document.getElementById('themeBtn').innerText = '☀️';
         }
         const memoId = new URLSearchParams(window.location.search).get('id');
-        if (memoId) loadMemo();
-        else {
+        if (memoId) {
+            loadMemo();
+        } else {
             document.getElementById('create-mode').classList.remove('hidden');
-            document.getElementById('memoPassword').value = localStorage.getItem('ghost_last_password') || '';
-            document.getElementById('memoHint').value = localStorage.getItem('ghost_last_hint') || '';
+            // 마지막 암호/힌트 자동입력
+            const lastPassword = localStorage.getItem('ghost_last_password');
+            const lastHint = localStorage.getItem('ghost_last_hint');
+            if (lastPassword) document.getElementById('memoPassword').value = lastPassword;
+            if (lastHint) document.getElementById('memoHint').value = lastHint;
         }
     };
+
 </script>
 </body>
 </html>
